@@ -71,12 +71,12 @@ export function HackathonList({ hackathons }: HackathonListProps) {
             placeholder="Search hackathons..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pl-9 border-blue-200 focus-visible:border-blue-400 focus-visible:ring-blue-200/50"
           />
         </div>
 
         <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] border-blue-200 data-[state=open]:border-blue-400">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-white">
@@ -90,7 +90,7 @@ export function HackathonList({ hackathons }: HackathonListProps) {
         </Select>
 
         <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] border-blue-200 data-[state=open]:border-blue-400">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-white">

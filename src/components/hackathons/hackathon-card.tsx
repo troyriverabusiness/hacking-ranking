@@ -9,7 +9,7 @@ import { formatDateRange, type Hackathon } from "@/lib/mock-data";
 export function HackathonCard({ hackathon }: { hackathon: Hackathon }) {
   return (
     <Link href={`/hackathons/${hackathon.id}`}>
-      <Card className="cursor-pointer hover:shadow-lg h-full">
+      <Card className="cursor-pointer hover:shadow-lg h-full border-blue-200 hover:border-blue-300 transition-colors">
         <CardHeader className="pb-3">
           <div className="h-32 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg mb-3 flex items-center justify-center">
             <Trophy className="h-12 w-12 text-blue-600" />

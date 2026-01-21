@@ -29,7 +29,7 @@ export function LeaderboardTabs({
   const listClassName =
     "mb-6 h-9 w-fit rounded-none border-b border-slate-200 bg-transparent p-0";
   const triggerClassName =
-    "flex-none rounded-none border-0 border-b-2 border-transparent bg-transparent px-4 text-sm font-medium text-slate-500 shadow-none data-[state=active]:border-slate-900 data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-slate-900 data-[state=active]:shadow-none";
+    "flex-none rounded-none border-0 border-b-2 border-transparent bg-transparent px-4 text-sm font-medium text-slate-500 shadow-none data-[state=active]:border-blue-200 data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-slate-900 data-[state=active]:shadow-none";
 
   return (
     <div className="flex flex-col gap-2 w-full">
