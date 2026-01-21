@@ -14,6 +14,7 @@ import {
   type ElementRef,
 } from "react";
 
+const INDICATOR_INSET = 8;
 
 const TabsListWithIndicator = forwardRef<
   ElementRef<typeof TabsList>,
@@ -56,8 +57,8 @@ const TabsListWithIndicator = forwardRef<
     const triggerRect = activeTrigger.getBoundingClientRect();
 
     setIndicator({
-      width: triggerRect.width,
-      left: triggerRect.left - listRect.left,
+      width: Math.max(triggerRect.width - INDICATOR_INSET * 2, 0),
+      left: triggerRect.left - listRect.left + INDICATOR_INSET,
       visible: true,
     });
   }, []);
@@ -120,7 +121,7 @@ export function LeaderboardTabs({
   const listClassName =
     "mb-6 h-9 w-fit rounded-none bg-transparent p-0";
   const triggerClassName =
-    "relative z-10 flex-none rounded-none border-0 border-b-2 border-transparent bg-transparent px-4 text-sm font-medium text-slate-500 shadow-none transition-colors duration-300 data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-slate-900 data-[state=active]:shadow-none";
+    "relative z-10 flex-none rounded-none border-0 bg-transparent px-4 text-sm font-medium text-slate-500 shadow-none transition-colors duration-300 data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-slate-900 data-[state=active]:shadow-none";
 
   return (
     <div className="flex flex-col gap-2 w-full">
