@@ -152,6 +152,7 @@ export default function LeaderboardPage() {
         </p>
       </div>
 
+      {/* Tabs for leaderboard, city, and topic */}
       <Tabs value={tab} onValueChange={(value) => setTab(value as typeof tab)} className="w-full">
         <LeaderboardTabs
           value={tab}
@@ -169,23 +170,11 @@ export default function LeaderboardPage() {
         </TabsContent>
 
         <TabsContent value="city">
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">{selectedCity} Rankings</h2>
-              <p className="text-gray-500 mt-1">Showing rankings for {selectedCity}.</p>
-            </div>
-            <LeaderboardContent />
-          </div>
+          <LeaderboardContent />
         </TabsContent>
 
         <TabsContent value="topic">
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">{selectedTopic} Rankings</h2>
-              <p className="text-gray-500 mt-1">Showing rankings for {selectedTopic}.</p>
-            </div>
-            <LeaderboardContent />
-          </div>
+          <LeaderboardContent />
         </TabsContent>
       </Tabs>
     </div>
