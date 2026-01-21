@@ -70,8 +70,8 @@ export function HackathonMap({ hackathons }: HackathonMapProps) {
             center={[marker.lat, marker.lng]}
             radius={6}
             pathOptions={{
-              color: "#7c3aed",
-              fillColor: "#8b5cf6",
+              color: "#5C88F6",
+              fillColor: "#83C3E6",
               fillOpacity: 0.6,
             }}
           >

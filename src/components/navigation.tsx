@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,7 +12,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
 
 export function Navigation() {
   return (
@@ -84,18 +82,13 @@ function MobileNavigation() {
 }
 
 function DesktopNavigation() {
-  const router = useRouter();
-
   return (
     <div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
       <NavigationMenu viewport={false}>
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger asChild>
-              <Link href="/leaderboard" onClick={(e) => {
-                e.stopPropagation();
-                router.push('/leaderboard');
-              }} className="group">
+              <Link href="/leaderboard" className="group">
                 Leaderboard
                 <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180" aria-hidden="true" />
               </Link>
@@ -147,10 +140,7 @@ function DesktopNavigation() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger asChild>
-              <Link href="/hackathons" onClick={(e) => {
-                e.stopPropagation();
-                router.push('/hackathons');
-              }} className="group">
+              <Link href="/hackathons" className="group">
                 Hackathons
                 <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180" aria-hidden="true" />
               </Link>

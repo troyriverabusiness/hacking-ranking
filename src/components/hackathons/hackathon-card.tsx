@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatDateRange, type Hackathon } from "@/lib/mock-data";
 
+const NOW = typeof window === "undefined" ? undefined : new Date();
+
 const STATUS_STYLES = {
   upcoming: "border-emerald-100 bg-emerald-50 text-emerald-700",
   ongoing: "border-blue-100 bg-blue-50 text-blue-700",
