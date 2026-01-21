@@ -18,7 +18,7 @@ const HackathonMap = dynamic(
 
 export default function HackathonsPage() {
   return (
-    <div className="w-full">
+    <div className="w-full" suppressHydrationWarning>
       <div className="grid grid-cols-1 sm:grid-cols-2 items-start">
         <div className="px-6 sm:px-8 lg:px-10 py-8 sm:pr-10">
           <HackathonList hackathons={mockHackathons} />
