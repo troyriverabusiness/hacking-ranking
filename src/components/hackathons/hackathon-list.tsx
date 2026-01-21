@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { LayoutGrid, List, Search, X } from "lucide-react";
 import { HackathonCard } from "@/components/hackathons/hackathon-card";
 import { HackathonListItem } from "@/components/hackathons/hackathon-list-item";
@@ -18,12 +18,18 @@ import { locations, popularTopics, type Hackathon, type Topic } from "@/lib/mock
 
 type HackathonListProps = {
   hackathons: Hackathon[];
+  initialView?: "grid" | "list";
 };
 
-export function HackathonList({ hackathons }: HackathonListProps) {
+export function HackathonList({ hackathons, initialView = "grid" }: HackathonListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
+  const [view, setView] = useState<"grid" | "list">(initialView);
+
+  useEffect(() => {
+    setView(initialView);
+  }, [initialView]);
 
   const filteredHackathons = useMemo(() => {
     return hackathons.filter((hackathon) => {
@@ -31,21 +37,23 @@ export function HackathonList({ hackathons }: HackathonListProps) {
                            hackathon.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesLocation = selectedLocation === "all" || hackathon.location === selectedLocation;
       const matchesTopic = selectedTopic === "all" || hackathon.topics.includes(selectedTopic as Topic);
-
+ 
       return matchesSearch && matchesLocation && matchesTopic;
     });
   }, [hackathons, searchQuery, selectedLocation, selectedTopic]);
-
+ 
   const clearFilters = () => {
     setSearchQuery("");
+
     setSelectedLocation("all");
     setSelectedTopic("all");
   };
-
+ 
   const hasActiveFilters = searchQuery || selectedLocation !== "all" || selectedTopic !== "all";
-
+ 
   return (
-    <Tabs defaultValue="grid" className="w-full space-y-8">
+    <Tabs value={view} onValueChange={(value) => setView(value as "grid" | "list")} className="w-full space-y-8">
+
       <header className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Hackathons</h1>

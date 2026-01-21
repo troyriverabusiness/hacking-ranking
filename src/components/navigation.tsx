@@ -155,11 +155,11 @@ function DesktopNavigation() {
                 <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180" aria-hidden="true" />
               </Link>
             </NavigationMenuTrigger>
-            <NavigationMenuContent>
+            <NavigationMenuContent align="start">
               <ul className="flex flex-col w-[300px] p-2">
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link href="/hackathons?status=active">
+                    <Link href="/hackathons?view=grid">
                       <div className="text-sm font-medium leading-none">Grid View</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                         Browse hackathons in a grid view
@@ -169,7 +169,7 @@ function DesktopNavigation() {
                 </li>
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link href="/hackathons?status=completed">
+                    <Link href="/hackathons?view=list">
                       <div className="text-sm font-medium leading-none">List View</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                         Browse hackathons in a list view

@@ -83,13 +83,23 @@ function NavigationMenuTrigger({
 
 function NavigationMenuContent({
   className,
+  align = "center",
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
+}: React.ComponentProps<typeof NavigationMenuPrimitive.Content> & {
+  align?: "start" | "center" | "end"
+}) {
+  const alignmentClasses: Record<string, string> = {
+    start: "md:left-0 md:translate-x-0",
+    center: "md:left-1/2 md:-translate-x-1/2",
+    end: "md:left-auto md:right-0 md:translate-x-0",
+  }
+
   return (
     <NavigationMenuPrimitive.Content
       data-slot="navigation-menu-content"
       className={cn(
-        "md:absolute md:top-full md:left-1/2 md:-translate-x-1/2 md:mt-1.5 bg-white rounded-md shadow-lg border border-blue-100",
+        "md:absolute md:top-full md:mt-1.5 bg-white rounded-md shadow-lg border border-blue-100",
+        alignmentClasses[align] ?? alignmentClasses.center,
         className
       )}
       {...props}
