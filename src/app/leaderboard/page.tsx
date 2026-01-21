@@ -4,6 +4,8 @@ import * as React from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LeaderboardTabs } from "@/components/leaderboard/leaderboard-tabs";
 import { LeaderboardContent } from "@/components/leaderboard/leaderboard-content";
+import { SkyBackground } from "@/components/sky-bg";
+
 import {
   locations,
   mockHackathons,
@@ -34,30 +36,32 @@ export default function LeaderboardPage() {
   const [selectedTopic, setSelectedTopic] = React.useState<Topic>(topics[0]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
-        <p className="text-gray-600 mt-1">
-          Top performers across all hackathons
-        </p>
-      </div>
+    <div className="relative min-h-screen">
+      {tab === "leaderboard" && <SkyBackground />}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
+          <p className="text-gray-600 mt-1">
+            Top performers across all hackathons
+          </p>
+        </div>
 
-      {/* Tabs for leaderboard, city, and topic */}
-      <Tabs value={tab} onValueChange={(value) => setTab(value as typeof tab)} className="w-full">
-        <LeaderboardTabs
-          value={tab}
-          onValueChange={setTab}
-          cities={locations}
-          topics={topics}
-          cityValue={selectedCity}
-          onCityValueChange={setSelectedCity}
-          topicValue={selectedTopic}
-          onTopicValueChange={setSelectedTopic}
-        />
+        {/* Tabs for leaderboard, city, and topic */}
+        <Tabs value={tab} onValueChange={(value) => setTab(value as typeof tab)} className="w-full">
+          <LeaderboardTabs
+            value={tab}
+            onValueChange={setTab}
+            cities={locations}
+            topics={topics}
+            cityValue={selectedCity}
+            onCityValueChange={setSelectedCity}
+            topicValue={selectedTopic}
+            onTopicValueChange={setSelectedTopic}
+          />
 
-        <TabsContent value="leaderboard">
-          <LeaderboardContent />
-        </TabsContent>
+          <TabsContent value="leaderboard">
+            <LeaderboardContent />
+          </TabsContent>
 
         <TabsContent value="city">
           <LeaderboardContent />
@@ -67,6 +71,7 @@ export default function LeaderboardPage() {
           <LeaderboardContent />
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

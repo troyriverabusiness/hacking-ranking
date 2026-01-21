@@ -1,11 +1,11 @@
 export function SkyBackground() {
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
+    <div className="absolute inset-0 min-h-screen -z-10 overflow-hidden pointer-events-none">
       {/* Sky gradient - light blue to slightly darker blue */}
       <div className="absolute inset-0 bg-gradient-to-b from-sky-300 via-sky-400 to-sky-500" />
 
       {/* Clouds */}
-      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <svg className="absolute top-0 left-0 w-full h-screen" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="cloud-blur">
             <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
