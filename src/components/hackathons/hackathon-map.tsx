@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import type { LatLngExpression } from "leaflet";
+import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
 import type { Hackathon } from "@/lib/mock-data";
 
 type HackathonMapProps = {
   hackathons: Hackathon[];
 };
 
-const locationCoordinates: Record<string, [number, number]> = {
+const locationCoordinates: Record<string, LatLngExpression> = {
   London: [51.5072, -0.1276],
   Paris: [48.8566, 2.3522],
   Berlin: [52.52, 13.405],
@@ -15,20 +16,10 @@ const locationCoordinates: Record<string, [number, number]> = {
   Zurich: [47.3769, 8.5417],
 };
 
-const defaultCoordinate: [number, number] = [50.11, 8.68];
+const defaultCoordinate: LatLngExpression = [50.11, 8.68];
 const offsetStep = 0.08;
 
 export function HackathonMap({ hackathons }: HackathonMapProps) {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null;
-  }
-
   const groupedByLocation = hackathons.reduce<Record<string, Hackathon[]>>(
     (acc, hackathon) => {
       const locationKey = hackathon.location;
@@ -44,7 +35,7 @@ export function HackathonMap({ hackathons }: HackathonMapProps) {
   const markers = Object.entries(groupedByLocation).flatMap(
     ([location, locationHackathons]) => {
       const coordinate = locationCoordinates[location] ?? defaultCoordinate;
-      const [baseLat, baseLng] = coordinate;
+      const [baseLat, baseLng] = coordinate as [number, number];
       return locationHackathons.map((hackathon, index) => {
         const direction = index % 2 === 0 ? 1 : -1;
         return {
@@ -58,18 +49,15 @@ export function HackathonMap({ hackathons }: HackathonMapProps) {
     },
   );
 
-  // Dynamically import react-leaflet components
-  const { MapContainer, TileLayer, CircleMarker, Tooltip } = require("react-leaflet");
-
   return (
-    <section className="w-full">
+    <section className="w-full h-full">
       <MapContainer
         center={[50.2, 10.3]}
         zoom={4}
         minZoom={3}
         maxZoom={8}
         scrollWheelZoom
-        className="h-[60vh] w-full lg:h-full"
+        className="h-full w-full"
         style={{ backgroundColor: "#cfe9f6" }}
       >
         <TileLayer

@@ -8,7 +8,11 @@ const HackathonMap = dynamic(
   () => import("@/components/hackathons/hackathon-map").then((mod) => mod.HackathonMap),
   {
     ssr: false,
-    loading: () => <div className="flex items-center justify-center h-full">Loading map...</div>
+    loading: () => (
+      <div className="flex items-center justify-center h-full w-full bg-[#cfe9f6]">
+        <p className="text-muted-foreground">Loading map...</p>
+      </div>
+    )
   }
 );
 
