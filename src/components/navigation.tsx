@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sheet";
 
 const navLinks = [
-  { href: "/", label: "Leaderboard" },
+  { href: "/leaderboard", label: "Leaderboard" },
   { href: "/hackathons", label: "Hackathons" },
 ];
 
@@ -22,9 +22,6 @@ export function Navigation() {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === "/") {
-      return pathname === "/";
-    }
     return pathname.startsWith(href);
   };
 
@@ -33,9 +30,9 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <span className="text-2xl">✨</span>
-            <span className="ml-2 text-xl font-semibold text-gray-900">
+          <Link href="/leaderboard" className="flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-blue-600" />
+            <span className="text-xl font-semibold text-gray-900">
               Hackathon Leaderboard
             </span>
           </Link>
@@ -46,7 +43,7 @@ export function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium ${
                   isActive(link.href)
                     ? "text-blue-600"
                     : "text-gray-600 hover:text-gray-900"
@@ -60,7 +57,7 @@ export function Navigation() {
           {/* Desktop Avatar */}
           <div className="hidden md:flex items-center">
             <Link href="/profile/1">
-              <Avatar className="h-9 w-9 cursor-pointer hover:ring-2 hover:ring-blue-200 transition-all">
+              <Avatar className="h-9 w-9 cursor-pointer hover:ring-2 hover:ring-blue-200">
                 <AvatarImage src="" alt="User" />
                 <AvatarFallback className="bg-blue-100 text-blue-600">
                   JD
@@ -89,7 +86,7 @@ export function Navigation() {
               <SheetContent side="right" className="w-[280px]">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <span className="text-xl">✨</span>
+                    <Sparkles className="h-5 w-5 text-blue-600" />
                     <span>Menu</span>
                   </SheetTitle>
                 </SheetHeader>
@@ -98,7 +95,7 @@ export function Navigation() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`text-lg font-medium py-2 px-4 rounded-md transition-colors ${
+                      className={`text-lg font-medium py-2 px-4 rounded-md ${
                         isActive(link.href)
                           ? "bg-blue-50 text-blue-600"
                           : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"

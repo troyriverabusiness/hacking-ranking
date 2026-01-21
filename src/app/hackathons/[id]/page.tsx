@@ -2,8 +2,16 @@
 
 import { use } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  ArrowLeft,
+  Trophy,
+  Users,
+  Building2,
+  GraduationCap,
+  Calendar,
+  MapPin,
+} from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,7 +39,7 @@ function TeamMembersList({ team }: { team: Team }) {
         <Link
           key={member.id}
           href={`/profile/${member.id}`}
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50"
         >
           <Avatar className="h-10 w-10">
             <AvatarImage src="" alt={member.full_name} />
@@ -55,108 +63,90 @@ function TeamMembersList({ team }: { team: Team }) {
   );
 }
 
-function TeamCard({ team }: { team: Team }) {
-  const rankEmoji =
-    team.rank === 1 ? "🥇" : team.rank === 2 ? "🥈" : team.rank === 3 ? "🥉" : "🏅";
+function LeaderboardRow({ team }: { team: Team }) {
+  const topRank = team.rank <= 3;
+  const uniqueUniversities = new Set(
+    team.members.map((member) => member.university).filter(Boolean)
+  );
+  const uniqueCompanies = new Set(
+    team.members.map((member) => member.company).filter(Boolean)
+  );
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{rankEmoji}</span>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{team.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    {team.members.length} members
-                  </p>
+        <Card className="border-0 bg-transparent px-2 py-3 shadow-none transition hover:bg-gray-50">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(240px,1.2fr)_minmax(200px,0.9fr)_minmax(200px,0.9fr)_auto] md:items-center">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Badge variant={topRank ? "default" : "secondary"}>#{team.rank}</Badge>
+                {topRank && (
+                  <span className="flex h-7 w-7 items-center justify-center bg-blue-100 text-blue-700">
+                    <Trophy className="h-4 w-4" />
+                  </span>
+                )}
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Team</p>
+                <p className="text-base font-semibold text-gray-900">{team.name}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between gap-4 md:justify-start">
+              <div>
+                <p className="text-sm text-gray-500">Members</p>
+                <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
+                  <Users className="h-4 w-4 text-gray-400" />
+                  {team.members.length}
                 </div>
               </div>
-              <Badge variant={team.rank <= 3 ? "default" : "secondary"}>
-                #{team.rank}
+              <div className="flex -space-x-2">
+                {team.members.slice(0, 4).map((member) => (
+                  <Avatar
+                    key={member.id}
+                    className="h-8 w-8 border-2 border-white"
+                  >
+                    <AvatarImage src="" alt={member.full_name} />
+                    <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                      {member.full_name.split(" ").map((n) => n[0]).join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
+                {team.members.length > 4 && (
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gray-100 text-xs text-gray-600">
+                    +{team.members.length - 4}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Building2 className="h-3.5 w-3.5 text-gray-500" />
+                {uniqueCompanies.size} companies
+              </Badge>
+              <Badge variant="outline" className="flex items-center gap-1">
+                <GraduationCap className="h-3.5 w-3.5 text-gray-500" />
+                {uniqueUniversities.size} universities
               </Badge>
             </div>
-            <div className="flex -space-x-2">
-              {team.members.slice(0, 4).map((member) => (
-                <Avatar
-                  key={member.id}
-                  className="h-8 w-8 border-2 border-white"
-                >
-                  <AvatarImage src="" alt={member.full_name} />
-                  <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-                    {member.full_name.split(" ").map((n) => n[0]).join("")}
-                  </AvatarFallback>
-                </Avatar>
-              ))}
-              {team.members.length > 4 && (
-                <div className="h-8 w-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs text-gray-600">
-                  +{team.members.length - 4}
-                </div>
-              )}
+
+            <div className="text-sm text-gray-500 md:text-right">
+              View roster
             </div>
-          </CardContent>
+          </div>
         </Card>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span className="text-xl">{rankEmoji}</span>
+            {topRank && <Trophy className="h-5 w-5 text-blue-600" />}
             {team.name}
           </DialogTitle>
         </DialogHeader>
         <TeamMembersList team={team} />
       </DialogContent>
     </Dialog>
-  );
-}
-
-function PodiumCard({ team }: { team: Team }) {
-  const rankEmoji =
-    team.rank === 1 ? "🥇" : team.rank === 2 ? "🥈" : "🥉";
-  const orderClass =
-    team.rank === 1 ? "md:order-2" : team.rank === 2 ? "md:order-1" : "md:order-3";
-  const heightClass = team.rank === 1 ? "md:pt-0" : "md:pt-8";
-
-  return (
-    <div className={`${orderClass} ${heightClass}`}>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Card className="p-6 cursor-pointer hover:shadow-lg transition-shadow">
-            <div className="text-center">
-              <div className="text-4xl mb-3">{rankEmoji}</div>
-              <h3 className="font-semibold text-gray-900 text-lg">{team.name}</h3>
-              <p className="text-sm text-gray-500 mb-3">
-                {team.members.length} members
-              </p>
-              <div className="flex justify-center -space-x-2">
-                {team.members.slice(0, 3).map((member) => (
-                  <Avatar
-                    key={member.id}
-                    className="h-10 w-10 border-2 border-white"
-                  >
-                    <AvatarImage src="" alt={member.full_name} />
-                    <AvatarFallback className="bg-blue-100 text-blue-600 text-sm">
-                      {member.full_name.split(" ").map((n) => n[0]).join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                ))}
-              </div>
-            </div>
-          </Card>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <span className="text-xl">{rankEmoji}</span>
-              {team.name}
-            </DialogTitle>
-          </DialogHeader>
-          <TeamMembersList team={team} />
-        </DialogContent>
-      </Dialog>
-    </div>
   );
 }
 
@@ -173,8 +163,7 @@ export default function HackathonDetailPage({
   
   // If no teams found for this hackathon, use default mock teams
   const displayTeams = teams.length > 0 ? teams : mockTeams;
-  const podiumTeams = displayTeams.filter((t) => t.rank <= 3);
-  const otherTeams = displayTeams.filter((t) => t.rank > 3);
+  const leaderboardTeams = [...displayTeams].sort((a, b) => a.rank - b.rank);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -197,15 +186,16 @@ export default function HackathonDetailPage({
               {hackathon.description}
             </p>
             <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-              <span className="flex items-center gap-1">
-                📅{" "}
+              <span className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-gray-400" />
                 {formatDateRangeLong(
                   hackathon.start_timestamp,
                   hackathon.end_timestamp
                 )}
               </span>
-              <span className="flex items-center gap-1">
-                📍 {hackathon.location}
+              <span className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gray-400" />
+                {hackathon.location}
               </span>
             </div>
           </div>
@@ -222,27 +212,19 @@ export default function HackathonDetailPage({
       {/* Results Section */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Results</h2>
-
-        {/* Podium */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {podiumTeams.map((team) => (
-            <PodiumCard key={team.id} team={team} />
+        <div className="border-y border-gray-200">
+          <div className="hidden md:grid md:grid-cols-[minmax(240px,1.2fr)_minmax(200px,0.9fr)_minmax(200px,0.9fr)_auto] md:items-center md:bg-gray-50 md:px-2 md:py-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <span>Team</span>
+            <span>Members</span>
+            <span>Representation</span>
+            <span className="text-right">Details</span>
+          </div>
+          {leaderboardTeams.map((team) => (
+            <div key={team.id} className="border-t border-gray-200">
+              <LeaderboardRow team={team} />
+            </div>
           ))}
         </div>
-
-        {/* Other Teams */}
-        {otherTeams.length > 0 && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">
-              Other Participants
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {otherTeams.map((team) => (
-                <TeamCard key={team.id} team={team} />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Debug info - hidden, just for verification */}

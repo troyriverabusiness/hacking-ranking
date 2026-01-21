@@ -202,7 +202,7 @@ export default function ProfilePage({
                 href={`/hackathons/${participation.hackathon_id}`}
                 className="block"
               >
-                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors border">
+                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 border">
                   <div>
                     <p className="font-medium text-gray-900">
                       {participation.hackathon_name}
