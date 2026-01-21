@@ -43,7 +43,7 @@ function NavigationMenuItem({
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Item>) {
   return (
     <NavigationMenuPrimitive.Item
-      className={className}
+      className={cn("relative", className)}
       {...props}
     />
   )
@@ -89,7 +89,7 @@ function NavigationMenuContent({
     <NavigationMenuPrimitive.Content
       data-slot="navigation-menu-content"
       className={cn(
-        "md:absolute md:top-full md:mt-1.5 bg-white rounded-md shadow-lg border border-blue-100",
+        "md:absolute md:top-full md:left-1/2 md:-translate-x-1/2 md:mt-1.5 bg-white rounded-md shadow-lg border border-blue-100",
         className
       )}
       {...props}
