@@ -38,6 +38,11 @@ export default function LeaderboardPage() {
   return (
     <div className="relative min-h-screen">
       {tab === "leaderboard" && <SkyBackground />}
+      {tab === "leaderboard" && (
+        <div className="absolute inset-0 flex justify-center pointer-events-none">
+          <div className="w-full max-w-7xl bg-[#FAFBFC]"></div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
