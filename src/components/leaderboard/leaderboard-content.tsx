@@ -16,10 +16,17 @@ export function LeaderboardContent() {
         ))}
       </div>
 
-      <div className="space-y-3">
-        {rest.map((profile, index) => (
-          <LeaderboardRow key={profile.id} profile={profile} rank={index + 4} />
-        ))}
+      <div className="border-t border-gray-200">
+        <div className="grid grid-cols-[72px_minmax(0,1fr)_96px] items-center px-4 sm:px-6 py-2 text-xs uppercase tracking-wide text-gray-500 border-b border-gray-900">
+          <span>Pos</span>
+          <span>Name</span>
+          <span className="text-right">Elo</span>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {rest.map((profile, index) => (
+            <LeaderboardRow key={profile.id} profile={profile} rank={index + 4} />
+          ))}
+        </div>
       </div>
     </div>
   );

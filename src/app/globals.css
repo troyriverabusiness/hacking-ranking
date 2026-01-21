@@ -26,6 +26,7 @@
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
+  --color-hover-accent: var(--hover-accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -79,6 +80,7 @@
   --sidebar-accent-foreground: 222.2 47.4% 11.2%;
   --sidebar-border: 214.3 31.8% 91.4%;
   --sidebar-ring: 221.2 83.2% 53.3%;
+  --hover-accent: 210 80% 93%; /* #E0EFFB - very light blue */
 }
 
 .dark {
@@ -113,6 +115,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --hover-accent: 210 80% 93%; /* #E0EFFB - very light blue */
 }
 
 @layer base {
