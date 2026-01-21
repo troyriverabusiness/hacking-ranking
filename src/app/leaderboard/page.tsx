@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { LeaderboardTabs } from "@/components/leaderboard/leaderboard-tabs";
 import { LeaderboardContent } from "@/components/leaderboard/leaderboard-content";
 import {
