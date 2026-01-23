@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { HackathonList } from "@/components/hackathons/hackathon-list";
 import { mockHackathons, type Hackathon } from "@/lib/mock-data";
-import { getAllHackathons } from "@/lib/supabase-queries";
+import { getAllHackathons } from "@/lib/supabase/getAllHackathons";
 
 const HackathonMap = dynamic(
   () => import("@/components/hackathons/hackathon-map").then((mod) => mod.HackathonMap),
@@ -25,25 +25,17 @@ function HackathonsPageContent() {
   const viewParam = searchParams.get("view");
   const normalizedView = viewParam === "grid" || viewParam === "list" ? viewParam : undefined;
 
-  const [hackathons, setHackathons] = React.useState<Hackathon[]>(mockHackathons);
+  const [hackathons, setHackathons] = React.useState<Hackathon[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     async function fetchHackathons() {
       setLoading(true);
       try {
-        const data = await getAllHackathons();
-
-        // Use mock data if no data from Supabase
-        if (data.length === 0) {
-          setHackathons(mockHackathons);
-        } else {
-          setHackathons(data);
-        }
+        const hackathons = await getAllHackathons();
+        setHackathons(hackathons);
       } catch (error) {
         console.error('Error fetching hackathons:', error);
-        // Fallback to mock data on error
-        setHackathons(mockHackathons);
       } finally {
         setLoading(false);
       }
