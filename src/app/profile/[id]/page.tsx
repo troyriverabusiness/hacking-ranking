@@ -2,17 +2,19 @@
 
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import type { Profile, RankHistory } from "@/models";
-import { getProfile, getRankHistory, getAllProfiles } from "@/lib/supabase";
+import type { Profile } from "@/models";
+import { getProfile, getAllProfiles } from "@/lib/supabase";
 import { getCurrentUser, signOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, UserX } from "lucide-react";
 import {
   ProfileHeader,
   ProfileStats,
   ProfileEloChart,
   ProfileHackathonHistory,
 } from "@/components/profile";
+import { Loading } from "@/components/loading";
+import { Empty } from "@/components/empty";
 
 interface HackathonParticipation {
   hackathon_id: string;
@@ -30,7 +32,6 @@ export default function ProfilePage({
   const { id } = use(params);
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [rankHistory, setRankHistory] = useState<RankHistory[]>([]);
   const [participations, setParticipations] = useState<HackathonParticipation[]>([]);
   const [allProfiles, setAllProfiles] = useState<Profile[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
@@ -40,9 +41,8 @@ export default function ProfilePage({
     async function fetchData() {
       setLoading(true);
       try {
-        const [profileData, rankHistoryData, allProfilesData, currentUser] = await Promise.all([
+        const [profileData, allProfilesData, currentUser] = await Promise.all([
           getProfile(id),
-          getRankHistory(id),
           getAllProfiles(),
           getCurrentUser(),
         ]);
@@ -53,14 +53,12 @@ export default function ProfilePage({
           setProfile(profileData);
         }
 
-        setRankHistory(rankHistoryData || []);
         setParticipations([]); // TODO: Implement getHackathonParticipations
         setAllProfiles(allProfilesData || []);
         setCurrentUserId(currentUser?.id || null);
       } catch (error) {
         console.error('Error fetching profile data:', error);
         setProfile(null);
-        setRankHistory([]);
         setParticipations([]);
         setAllProfiles([]);
         setCurrentUserId(null);
@@ -97,7 +95,7 @@ export default function ProfilePage({
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center py-12">
-          <div className="text-gray-500">Loading profile...</div>
+          <Loading size="lg" text="Loading profile..." />
         </div>
       </div>
     );
@@ -106,9 +104,11 @@ export default function ProfilePage({
   if (!profile) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Profile not found</p>
-        </div>
+        <Empty
+          icon={UserX}
+          title="Profile not found"
+          description="The profile you are looking for does not exist or has been removed."
+        />
       </div>
     );
   }
@@ -132,7 +132,7 @@ export default function ProfilePage({
 
       {/* ELO Chart */}
       <div className="mb-8">
-        <ProfileEloChart rankHistory={rankHistory} />
+        <ProfileEloChart userId={id} />
       </div>
 
       {/* Hackathon History */}

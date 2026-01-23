@@ -1,14 +1,33 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Calendar } from "lucide-react";
 import type { RankHistory } from "@/models";
+import { getRankHistory } from "@/lib/supabase/getRankHistory";
 
-interface ProfileEloChartProps {
-  rankHistory: RankHistory[];
-}
 
-export function ProfileEloChart({ rankHistory }: ProfileEloChartProps) {
+export function ProfileEloChart({ userId }: { userId: string }) {
+  const [rankHistory, setRankHistory] = useState<RankHistory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchRankHistory() {
+      setLoading(true);
+      try {
+        const data = await getRankHistory(userId);
+        setRankHistory(data);
+      } catch (error) {
+        console.error('Error fetching rank history:', error);
+        setRankHistory([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchRankHistory();
+  }, [userId]);
+
   const startElo = rankHistory[0]?.elo || 0;
   const endElo = rankHistory[rankHistory.length - 1]?.elo || 0;
   const eloChange = endElo - startElo;
