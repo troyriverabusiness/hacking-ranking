@@ -3,11 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { type Hackathon } from "@/models";
 import { formatDateRangeLong } from "@/lib/date-formatting";
 
-interface HackathonHeroProps {
-  hackathon: Hackathon;
-}
 
-export function HackathonHero({ hackathon }: HackathonHeroProps) {
+export function HackathonHero({ hackathon }: { hackathon: Hackathon }) {
   return (
     <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 mb-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

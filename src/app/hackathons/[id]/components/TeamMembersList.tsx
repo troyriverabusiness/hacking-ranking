@@ -5,12 +5,10 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { type Profile } from "@/models";
 import { getTeamParticipants } from "@/lib/supabase/index";
+import { Loading } from "@/components/loading";
 
-interface TeamMembersListProps {
-  teamId: string;
-}
 
-export function TeamMembersList({ teamId }: TeamMembersListProps) {
+export function TeamMembersList({ teamId }: { teamId: string }) {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +23,7 @@ export function TeamMembersList({ teamId }: TeamMembersListProps) {
   }, [teamId]);
 
   if (loading) {
-    return <div className="text-sm text-gray-500 mt-4">Loading team members...</div>;
+    return <Loading size="sm" text="Loading team members..." className="mt-4" />;
   }
 
   return (

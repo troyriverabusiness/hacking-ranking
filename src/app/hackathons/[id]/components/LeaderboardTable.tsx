@@ -3,11 +3,8 @@
 import { Team } from "@/models";
 import { LeaderboardRow } from "./LeaderboardRow";
 
-interface LeaderboardTableProps {
-  teams: Team[];
-}
 
-export function LeaderboardTable({ teams }: LeaderboardTableProps) {
+export function LeaderboardTable({ teams }: { teams: Team[] }) {
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Results</h2>
