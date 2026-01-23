@@ -5,8 +5,13 @@ import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { HackathonList } from "@/components/hackathons/hackathon-list";
-import { mockHackathons, type Hackathon } from "@/lib/mock-data";
-import { getAllHackathons } from "@/lib/supabase/getAllHackathons";
+
+import { Loading } from "@/components/loading";
+
+import { type Hackathon } from "@/models";
+
+import { getAllHackathons } from "@/lib/supabase/index";
+
 
 const HackathonMap = dynamic(
   () => import("@/components/hackathons/hackathon-map").then((mod) => mod.HackathonMap),
@@ -14,7 +19,7 @@ const HackathonMap = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center h-full w-full bg-[#cfe9f6]">
-        <p className="text-muted-foreground">Loading map...</p>
+        <Loading size="lg" text="Loading map..." className="py-12" />
       </div>
     )
   }

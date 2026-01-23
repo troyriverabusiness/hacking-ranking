@@ -4,9 +4,6 @@ import type { LatLngExpression } from "leaflet";
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
 import type { Hackathon } from "@/lib/mock-data";
 
-type HackathonMapProps = {
-  hackathons: Hackathon[];
-};
 
 const locationCoordinates: Record<string, LatLngExpression> = {
   London: [51.5072, -0.1276],
@@ -19,7 +16,7 @@ const locationCoordinates: Record<string, LatLngExpression> = {
 const defaultCoordinate: LatLngExpression = [50.11, 8.68];
 const offsetStep = 0.08;
 
-export function HackathonMap({ hackathons }: HackathonMapProps) {
+export function HackathonMap({ hackathons }: { hackathons: Hackathon[] }) {
   const groupedByLocation = hackathons.reduce<Record<string, Hackathon[]>>(
     (acc, hackathon) => {
       const locationKey = hackathon.location;
