@@ -1,4 +1,4 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../supabaseClient";
 import { Hackathon } from "@/models/hackathon";
 
 // Fetch a single Hackathon 

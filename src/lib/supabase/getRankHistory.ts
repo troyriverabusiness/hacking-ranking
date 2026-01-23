@@ -1,4 +1,4 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../supabaseClient";
 import { RankHistory } from "@/models/rankHistory";
 
 // Fetch the rank history for a given profile (latest first)

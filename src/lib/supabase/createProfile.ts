@@ -1,4 +1,4 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../supabaseClient";
 import { University, Role } from "@/models/enums";
 
 interface CreateProfileData {

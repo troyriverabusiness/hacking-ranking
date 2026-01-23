@@ -1,5 +1,5 @@
 import { Hackathon } from "@/models/hackathon";
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../supabaseClient";
 
 // All Hackathons Saved 
 // Used in: Hackathons grid & list view (+ map)
