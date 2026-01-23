@@ -1,8 +1,12 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import type { Profile, RankHistory } from "@/models";
 import { getProfile, getRankHistory, getAllProfiles } from "@/lib/supabase";
+import { getCurrentUser, signOut } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 import {
   ProfileHeader,
   ProfileStats,
@@ -24,20 +28,23 @@ export default function ProfilePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [rankHistory, setRankHistory] = useState<RankHistory[]>([]);
   const [participations, setParticipations] = useState<HackathonParticipation[]>([]);
   const [allProfiles, setAllProfiles] = useState<Profile[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
-        const [profileData, rankHistoryData, allProfilesData] = await Promise.all([
+        const [profileData, rankHistoryData, allProfilesData, currentUser] = await Promise.all([
           getProfile(id),
           getRankHistory(id),
           getAllProfiles(),
+          getCurrentUser(),
         ]);
 
         if (!profileData) {
@@ -49,12 +56,14 @@ export default function ProfilePage({
         setRankHistory(rankHistoryData || []);
         setParticipations([]); // TODO: Implement getHackathonParticipations
         setAllProfiles(allProfilesData || []);
+        setCurrentUserId(currentUser?.id || null);
       } catch (error) {
         console.error('Error fetching profile data:', error);
         setProfile(null);
         setRankHistory([]);
         setParticipations([]);
         setAllProfiles([]);
+        setCurrentUserId(null);
       } finally {
         setLoading(false);
       }
@@ -70,6 +79,19 @@ export default function ProfilePage({
     topThreeFinishes: participations.filter((p) => p.rank <= 3).length,
     currentRank: allProfiles.findIndex((p) => p.id === id) + 1 || 1,
   };
+
+  // Check if this is the current user's profile
+  const isOwnProfile = currentUserId === id;
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  }
 
   if (loading) {
     return (
@@ -115,6 +137,20 @@ export default function ProfilePage({
 
       {/* Hackathon History */}
       <ProfileHackathonHistory participations={participations} />
+
+      {/* Logout button - only shown for current user's profile */}
+      {isOwnProfile && (
+        <div className="mt-8 pt-8 border-t flex justify-center">
+          <Button
+            variant="outline"
+            onClick={handleSignOut}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign Out
+          </Button>
+        </div>
+      )}
 
       {/* Debug info - hidden, just for verification */}
       <p className="text-xs text-gray-400 mt-4">Profile ID: {id}</p>
