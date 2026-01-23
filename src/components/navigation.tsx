@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Trophy } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   NavigationMenu,
@@ -94,43 +94,40 @@ function DesktopNavigation() {
               </Link>
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-0 p-2 md:w-[500px] md:grid-cols-2">
+              <ul className="grid grid-cols-[140px_1fr] gap-2 w-[380px] p-2">
+                <li className="row-span-2">
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/leaderboard?filter=top"
+                      className="relative flex h-full w-full select-none flex-col justify-center rounded-md bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-500 p-4 no-underline outline-none shadow-md overflow-hidden group"
+                    >
+                      <div className="absolute inset-0 -translate-x-full -translate-y-full group-hover:translate-x-full group-hover:translate-y-full transition-transform duration-700 ease-out bg-gradient-to-br from-transparent via-white/30 to-transparent" />
+                      <Trophy className="h-6 w-6 text-white mb-2 relative z-10" />
+                      <div className="text-base font-bold text-white relative z-10">
+                        Top 100
+                      </div>
+                      <div className="text-xs text-white/90 mt-1 relative z-10">
+                        Elite performers
+                      </div>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link href="/leaderboard">
-                      <div className="text-sm font-medium leading-none">All Hackers</div>
+                    <Link href="/leaderboard?tab=city">
+                      <div className="text-sm font-medium leading-none">By City</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        View the complete ranking of all participants
+                        View rankings organized by city
                       </p>
                     </Link>
                   </NavigationMenuLink>
                 </li>
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link href="/leaderboard?filter=top">
-                      <div className="text-sm font-medium leading-none">Top 100</div>
+                    <Link href="/leaderboard?tab=topic">
+                      <div className="text-sm font-medium leading-none">By Topic</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        See the highest ranked participants
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link href="/leaderboard?filter=rising">
-                      <div className="text-sm font-medium leading-none">Rising Stars</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Hackers with the fastest growing scores
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link href="/leaderboard?filter=recent">
-                      <div className="text-sm font-medium leading-none">Recent Activity</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Latest score updates and changes
+                        View rankings organized by topic
                       </p>
                     </Link>
                   </NavigationMenuLink>

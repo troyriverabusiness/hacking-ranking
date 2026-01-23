@@ -1,8 +1,10 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import type { Location, Topic } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   forwardRef,
   useCallback,
@@ -96,6 +98,81 @@ const TabsListWithIndicator = forwardRef<
 
 type PrimaryTab = "leaderboard" | "city" | "topic";
 
+const ScrollableTabsList = forwardRef<
+  HTMLDivElement,
+  { children: React.ReactNode; className?: string }
+>(function ScrollableTabsList({ children, className }, ref) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftButton, setShowLeftButton] = useState(false);
+  const [showRightButton, setShowRightButton] = useState(false);
+
+  const updateButtonVisibility = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    setShowLeftButton(scrollLeft > 0);
+    setShowRightButton(scrollLeft < scrollWidth - clientWidth - 1);
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    updateButtonVisibility();
+
+    const handleScroll = () => updateButtonVisibility();
+    container.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", updateButtonVisibility);
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateButtonVisibility);
+    };
+  }, [updateButtonVisibility, children]);
+
+  const scroll = (direction: "left" | "right") => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const scrollAmount = 200;
+    container.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div ref={ref} className={cn("relative", className)}>
+      {showLeftButton && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute left-0 top-1/2 z-20 h-8 w-8 -translate-y-1/2 rounded-full bg-white shadow-md hover:bg-gray-100"
+          onClick={() => scroll("left")}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+      )}
+      <div
+        ref={scrollContainerRef}
+        className="w-full overflow-x-auto scrollbar-hide"
+      >
+        {children}
+      </div>
+      {showRightButton && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-0 top-1/2 z-20 h-8 w-8 -translate-y-1/2 rounded-full bg-white shadow-md hover:bg-gray-100"
+          onClick={() => scroll("right")}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
+  );
+});
 
 type LeaderboardTabsProps = {
   value: PrimaryTab;
@@ -119,12 +196,12 @@ export function LeaderboardTabs({
   onTopicValueChange,
 }: LeaderboardTabsProps) {
   const listClassName =
-    "mb-6 h-9 w-fit rounded-none bg-transparent p-0";
+    "h-9 w-fit rounded-none bg-transparent p-0";
   const triggerClassName =
-    "relative z-10 flex-none rounded-none border-0 bg-transparent px-4 text-sm font-medium text-slate-500 shadow-none transition-colors duration-300 data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-slate-900 data-[state=active]:shadow-none";
+    "relative z-10 flex-none rounded-none border-0 bg-transparent px-4 text-sm font-medium text-slate-500 shadow-none transition-colors duration-300 data-[state=active]:bg-transparent data-[state=active]:text-slate-900 data-[state=active]:shadow-none";
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-6 w-full mb-10">
       <TabsListWithIndicator className={listClassName} activeValue={value}>
         <TabsTrigger className={triggerClassName} value="leaderboard">
           Leaderboard
@@ -168,7 +245,7 @@ export function LeaderboardTabs({
           onValueChange={(nextValue) => onTopicValueChange(nextValue as Topic)}
           className="w-full"
         >
-          <div className="w-full overflow-x-auto">
+          <ScrollableTabsList>
             <TabsListWithIndicator
               className={`${listClassName} min-w-max`}
               activeValue={topicValue}
@@ -183,7 +260,7 @@ export function LeaderboardTabs({
                 </TabsTrigger>
               ))}
             </TabsListWithIndicator>
-          </div>
+          </ScrollableTabsList>
         </Tabs>
       )}
     </div>

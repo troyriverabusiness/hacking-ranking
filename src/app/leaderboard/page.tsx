@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams } from "next/navigation";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LeaderboardTabs } from "@/components/leaderboard/leaderboard-tabs";
 import { LeaderboardContent } from "@/components/leaderboard/leaderboard-content";
@@ -14,9 +15,21 @@ import {
 } from "@/lib/mock-data";
 
 export default function LeaderboardPage() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+
   const [tab, setTab] = React.useState<"leaderboard" | "city" | "topic">(
-    "leaderboard"
+    (tabParam === "city" || tabParam === "topic") ? tabParam : "leaderboard"
   );
+
+  // Update tab when URL query parameter changes
+  React.useEffect(() => {
+    if (tabParam === "city" || tabParam === "topic") {
+      setTab(tabParam);
+    } else if (tabParam === null) {
+      setTab("leaderboard");
+    }
+  }, [tabParam]);
 
   const topics = React.useMemo(() => {
     const seen = new Set<Topic>();
@@ -37,11 +50,12 @@ export default function LeaderboardPage() {
 
   return (
     <div className="relative min-h-screen">
-      {tab === "leaderboard" && <SkyBackground />}
+      {tab === "leaderboard"}
       {tab === "leaderboard" && (
         <div className="absolute inset-0 flex justify-center pointer-events-none">
           <div className="w-full max-w-7xl bg-[#FAFBFC]"></div>
         </div>
+        
       )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         <div className="mb-8">
