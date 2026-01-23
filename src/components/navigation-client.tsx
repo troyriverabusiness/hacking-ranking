@@ -12,7 +12,9 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { UserMenu } from "./auth/user-menu";
-import type { Profile } from "@/lib/mock-data";
+
+// Verified imports
+import type { Profile } from "@/models/profile";
 
 interface NavigationClientProps {
   user: {

@@ -6,11 +6,12 @@ import { useSearchParams } from "next/navigation";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { LeaderboardTabs } from "@/components/leaderboard/leaderboard-tabs";
 import { LeaderboardContent } from "@/components/leaderboard/leaderboard-content";
-import { SkyBackground } from "@/components/sky-bg";
-import { getLocations, getTopics } from "@/lib/supabase-queries";
-import { locations as fallbackLocations, popularTopics as fallbackTopics } from "@/lib/mock-data";
+import { Loading } from "@/components/loading";
 
-import type { Location, Topic } from "@/lib/mock-data";
+import type { Location, Topic } from "@/models/enums";
+
+// Import Supabase enum values
+import { locations as cities, topics as allTopics } from "@/models/enums";
 
 function LeaderboardPageContent() {
   const searchParams = useSearchParams();
@@ -20,8 +21,8 @@ function LeaderboardPageContent() {
     (tabParam === "city" || tabParam === "topic") ? tabParam : "leaderboard"
   );
 
-  const [locations, setLocations] = React.useState<Location[]>(fallbackLocations);
-  const [topics, setTopics] = React.useState<Topic[]>(fallbackTopics);
+  const [locations, setLocations] = React.useState<Location[]>(cities);
+  const [topics, setTopics] = React.useState<Topic[]>(allTopics);
 
   // Update tab when URL query parameter changes
   React.useEffect(() => {
@@ -32,37 +33,14 @@ function LeaderboardPageContent() {
     }
   }, [tabParam]);
 
-  // Fetch locations and topics from Supabase
-  React.useEffect(() => {
-    async function fetchFilters() {
-      const [fetchedLocations, fetchedTopics] = await Promise.all([
-        getLocations(),
-        getTopics(),
-      ]);
-
-      if (fetchedLocations.length > 0) {
-        setLocations(fetchedLocations);
-      }
-
-      if (fetchedTopics.length > 0) {
-        setTopics(fetchedTopics);
-      }
-    }
-
-    fetchFilters();
-  }, []);
-
   const [selectedCity, setSelectedCity] = React.useState<Location>(locations[0]);
   const [selectedTopic, setSelectedTopic] = React.useState<Topic>(topics[0]);
 
   return (
     <div className="relative min-h-screen">
-      {tab === "leaderboard"}
-      {tab === "leaderboard" && (
-        <div className="absolute inset-0 flex justify-center pointer-events-none">
-          <div className="w-full max-w-7xl bg-[#FAFBFC]"></div>
-        </div>
-      )}
+      <div className="absolute inset-0 flex justify-center pointer-events-none">
+        <div className="w-full max-w-7xl bg-[#FAFBFC]"></div>
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
@@ -103,7 +81,7 @@ function LeaderboardPageContent() {
 
 export default function LeaderboardPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="text-gray-500">Loading...</div></div>}>
+    <Suspense fallback={<Loading size="lg" text="Loading leaderboard..." className="py-12" />}>
       <LeaderboardPageContent />
     </Suspense>
   );

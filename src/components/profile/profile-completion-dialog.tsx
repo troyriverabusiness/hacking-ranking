@@ -19,8 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { updateProfile, createProfile } from '@/lib/supabase-queries';
-import type { University } from '@/lib/mock-data';
+import type { University } from '@/models';
+
+// TODO: Import createProfile and updateProfile from supabase queries when implemented
 
 interface ProfileCompletionDialogProps {
   userId: string;

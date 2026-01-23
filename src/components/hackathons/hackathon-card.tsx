@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatDateRange } from "@/lib/date-formatting";
-import type { Hackathon } from "@/lib/mock-data";
+import type { Hackathon } from "@/models";
 
 const NOW = typeof window === "undefined" ? undefined : new Date();
 

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Calendar } from "lucide-react";
-import { RankHistory } from "@/lib/mock-data";
+import type { RankHistory } from "@/models";
 
 interface ProfileEloChartProps {
   rankHistory: RankHistory[];

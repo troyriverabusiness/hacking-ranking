@@ -5,7 +5,7 @@ import { Award, Medal, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import type { Profile } from "@/lib/mock-data";
+import type { Profile } from "@/models/profile";
 
 const podiumIconMap = {
   1: { Icon: Trophy, className: "text-amber-500" },

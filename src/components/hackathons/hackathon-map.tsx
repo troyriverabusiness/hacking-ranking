@@ -2,7 +2,7 @@
 
 import type { LatLngExpression } from "leaflet";
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
-import type { Hackathon } from "@/lib/mock-data";
+import type { Hackathon } from "@/models";
 import { useRouter } from "next/navigation";
 
 

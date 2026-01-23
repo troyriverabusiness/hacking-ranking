@@ -13,8 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { createProfile } from '@/lib/supabase-queries';
-import type { University } from '@/lib/mock-data';
+import type { University } from '@/models';
+
+// TODO: Import createProfile from supabase queries when implemented
 
 interface ProfileCreationFormProps {
   userId: string;

@@ -13,7 +13,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User as UserIcon } from 'lucide-react';
 import { signOut } from '@/app/actions/auth';
-import type { Profile } from '@/lib/mock-data';
+
+// Verified imports
+import type { Profile } from '@/models/profile';
 
 interface UserMenuProps {
   user: {

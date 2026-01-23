@@ -1,10 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { mockProfiles, type Location, type Topic, type Profile } from "@/lib/mock-data";
-import { getAllProfiles, getProfilesByLocation, getProfilesByTopic } from "@/lib/supabase-queries";
+
 import { LeaderboardRow } from "@/components/leaderboard/leaderboard-row";
 import { PodiumCard } from "@/components/leaderboard/podium-card";
+
+import { getAllProfiles } from "@/lib/supabase/index";
+
+// Verified imports
+import type { Location, Topic } from "@/models/enums";
+import type { Profile } from "@/models/profile";
+import { Loading } from "@/components/loading";
+import { Empty } from "@/components/empty";
 
 interface LeaderboardContentProps {
   location?: Location;
@@ -12,7 +19,7 @@ interface LeaderboardContentProps {
 }
 
 export function LeaderboardContent({ location, topic }: LeaderboardContentProps) {
-  const [profiles, setProfiles] = React.useState<Profile[]>(mockProfiles);
+  const [profiles, setProfiles] = React.useState<Profile[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -22,23 +29,18 @@ export function LeaderboardContent({ location, topic }: LeaderboardContentProps)
         let data: Profile[] = [];
 
         if (location) {
-          data = await getProfilesByLocation(location);
+          // TODO: Implement location filter
+          data = await getAllProfiles();
         } else if (topic) {
-          data = await getProfilesByTopic(topic);
+          // TODO: Implement topic filter
+          data = await getAllProfiles();
         } else {
           data = await getAllProfiles();
         }
 
-        // Use mock data if no data from Supabase
-        if (data.length === 0) {
-          setProfiles(mockProfiles);
-        } else {
-          setProfiles(data);
-        }
+        setProfiles(data);
       } catch (error) {
         console.error('Error fetching profiles:', error);
-        // Fallback to mock data on error
-        setProfiles(mockProfiles);
       } finally {
         setLoading(false);
       }
@@ -53,22 +55,23 @@ export function LeaderboardContent({ location, topic }: LeaderboardContentProps)
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-gray-500">Loading...</div>
+        <Loading size="lg" text="Loading leaderboard..." className="py-12" />
       </div>
     );
   }
 
   if (profiles.length === 0) {
+    const description =
+      location ? `No profiles found for ${location}` :
+      topic ? `No profiles found for ${topic}` :
+      'No profiles available';
+
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <p className="text-gray-500 text-lg">No profiles found</p>
-          <p className="text-gray-400 text-sm mt-2">
-            {location && `No profiles found for ${location}`}
-            {topic && `No profiles found for ${topic}`}
-            {!location && !topic && 'No profiles available'}
-          </p>
-        </div>
+        <Empty
+          title="No profiles found"
+          description={description}
+        />
       </div>
     );
   }

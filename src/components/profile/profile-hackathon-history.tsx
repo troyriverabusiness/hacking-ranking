@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { Calendar, Users } from "lucide-react";
 import { RankBadge } from "./rank-badge";
-import { HackathonParticipation } from "@/lib/mock-data";
+
+interface HackathonParticipation {
+  hackathon_id: string;
+  hackathon_name: string;
+  team_name: string;
+  rank: number;
+  date: string;
+}
 
 interface ProfileHackathonHistoryProps {
   participations: HackathonParticipation[];

@@ -46,6 +46,36 @@ export type Role = "user" | "admin" | "organizer";
 
 export const locations: Location[] = ["Munich", "Paris", "London", "Berlin", "Zurich"];
 
+export const topics: Topic[] = [
+    "AI",
+    "Robotics",
+    "Blockchain",
+    "Sustainability",
+    "Healthcare",
+    "Fintech",
+    "Education",
+    "Gaming",
+    "Cybersecurity",
+    "Music",
+    "Art",
+    "Cloud",
+    "Mobile",
+    "Web",
+    "AR",
+    "VR",
+    "Data Science",
+    "Hardware",
+    "IoT",
+    "Productivity",
+    "E-commerce",
+    "Transportation",
+    "Travel",
+    "Food Tech",
+    "Agriculture",
+    "Social Good",
+    "Developer Tools"
+];
+
 export const popularTopics: Topic[] = [
     "AI",
     "Blockchain",
@@ -53,7 +83,7 @@ export const popularTopics: Topic[] = [
     "Fintech",
     "Gaming",
     "Sustainability",
-]
+];
 
 export const universities: University[] = ["TUM", "LMU", "HM"];
 

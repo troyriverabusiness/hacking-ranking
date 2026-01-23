@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
-import { getProfileById } from "@/lib/supabase-queries";
+import { getProfile } from "@/lib/supabase/index";
 import { NavigationClient } from "./navigation-client";
 
 export async function Navigation() {
@@ -9,7 +9,7 @@ export async function Navigation() {
 
     let profile = null;
     if (user) {
-      profile = await getProfileById(user.id);
+      profile = await getProfile(user.id);
     }
 
     const userForClient = user ? { id: user.id, email: user.email || '' } : null;
