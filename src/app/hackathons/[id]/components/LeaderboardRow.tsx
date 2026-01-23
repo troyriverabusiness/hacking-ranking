@@ -13,15 +13,7 @@ import {
 import { type Team } from "@/models";
 import { TeamMembersList } from "./TeamMembersList";
 
-interface TeamWithCount extends Team {
-  participantCount: number;
-}
-
-interface LeaderboardRowProps {
-  team: TeamWithCount;
-}
-
-export function LeaderboardRow({ team }: LeaderboardRowProps) {
+export function LeaderboardRow({ team }: { team: Team }) {
   const topRank = team.rank <= 3;
 
   return (
@@ -49,7 +41,7 @@ export function LeaderboardRow({ team }: LeaderboardRowProps) {
               <p className="text-sm text-gray-500">Participants</p>
               <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
                 <Users className="h-4 w-4 text-gray-400" />
-                {team.participantCount}
+                {team.members.length}
               </div>
             </div>
           </div>
@@ -68,4 +60,3 @@ export function LeaderboardRow({ team }: LeaderboardRowProps) {
   );
 }
 
-export type { TeamWithCount };

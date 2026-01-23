@@ -1,9 +1,10 @@
 "use client";
 
-import { LeaderboardRow, type TeamWithCount } from "./LeaderboardRow";
+import { Team } from "@/models";
+import { LeaderboardRow } from "./LeaderboardRow";
 
 interface LeaderboardTableProps {
-  teams: TeamWithCount[];
+  teams: Team[];
 }
 
 export function LeaderboardTable({ teams }: LeaderboardTableProps) {
