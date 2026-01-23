@@ -1,22 +1,34 @@
 import Link from "next/link";
-import { Calendar, Users } from "lucide-react";
-import { RankBadge } from "./rank-badge";
+import { Calendar, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Loading } from "@/components/loading";
+import { Empty } from "@/components/empty";
+import { Hackathon } from "@/models/hackathon";
+import { getHackathonParticipations } from "@/lib/supabase/getHackathonParticipations";
 
-interface HackathonParticipation {
-  hackathon_id: string;
-  hackathon_name: string;
-  team_name: string;
-  rank: number;
-  date: string;
-}
-
-interface ProfileHackathonHistoryProps {
-  participations: HackathonParticipation[];
-}
 
 export function ProfileHackathonHistory({
-  participations,
-}: ProfileHackathonHistoryProps) {
+  userId,
+}: { userId: string }) {
+  const [participations, setParticipations] = useState<Hackathon[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchParticipations() {
+      setLoading(true);
+      try {
+        const hackathons = await getHackathonParticipations(userId);
+        setParticipations(hackathons);
+      } catch (error) {
+        console.error('Error fetching hackathon participations:', error);
+        setParticipations([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchParticipations();
+  }, [userId]);
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       {/* Header */}
@@ -32,13 +44,14 @@ export function ProfileHackathonHistory({
 
       {/* Content */}
       <div className="p-6">
-        {participations.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-              <Calendar className="w-8 h-8 text-gray-400" />
-            </div>
-            <p className="text-sm text-gray-500">No hackathon participations yet</p>
-          </div>
+        {loading ? (
+          <Loading size="lg" text="Loading hackathon history..." className="py-12" />
+        ) : participations.length === 0 ? (
+          <Empty
+            title="No hackathon participations yet"
+            description="Join a hackathon to start building your history."
+            className="py-12"
+          />
         ) : (
           <div className="relative">
             {/* Timeline line */}
@@ -46,10 +59,10 @@ export function ProfileHackathonHistory({
 
             {/* Timeline items */}
             <div className="space-y-6">
-              {participations.map((participation, index) => (
+              {participations.map((hackathon) => (
                 <Link
-                  key={participation.hackathon_id}
-                  href={`/hackathons/${participation.hackathon_id}`}
+                  key={hackathon.id}
+                  href={`/hackathons/${hackathon.id}`}
                   className="block group"
                 >
                   <div className="relative flex gap-4">
@@ -66,23 +79,35 @@ export function ProfileHackathonHistory({
                         <div className="flex items-start justify-between gap-4 mb-2">
                           <div className="flex-1">
                             <h4 className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
-                              {participation.hackathon_name}
+                              {hackathon.name}
                             </h4>
                             <div className="flex items-center gap-2 mt-1.5 text-sm text-gray-600">
-                              <Users className="w-3.5 h-3.5" />
-                              <span>{participation.team_name}</span>
+                              <MapPin className="w-3.5 h-3.5" />
+                              <span>{hackathon.location}</span>
                             </div>
                           </div>
-                          <RankBadge rank={participation.rank} />
                         </div>
                         <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-2">
                           <Calendar className="w-3.5 h-3.5" />
-                          {new Date(participation.date).toLocaleDateString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          <span>
+                            {new Date(hackathon.start_timestamp).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                          <span className="text-gray-300">•</span>
+                          <span>
+                            {new Date(hackathon.end_timestamp).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
                         </div>
+                        <p className="text-sm text-gray-600 mt-3 line-clamp-2">
+                          {hackathon.description}
+                        </p>
                       </div>
                     </div>
                   </div>

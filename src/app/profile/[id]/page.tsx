@@ -136,11 +136,11 @@ export default function ProfilePage({
       </div>
 
       {/* Hackathon History */}
-      <ProfileHackathonHistory participations={participations} />
+      <ProfileHackathonHistory userId={id} />
 
       {/* Logout button - only shown for current user's profile */}
       {isOwnProfile && (
-        <div className="mt-8 pt-8 border-t flex justify-center">
+        <div className="mb-8 pt-8 flex justify-end">
           <Button
             variant="outline"
             onClick={handleSignOut}
@@ -151,9 +151,6 @@ export default function ProfilePage({
           </Button>
         </div>
       )}
-
-      {/* Debug info - hidden, just for verification */}
-      <p className="text-xs text-gray-400 mt-4">Profile ID: {id}</p>
     </div>
   );
 }
