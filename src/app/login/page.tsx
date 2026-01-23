@@ -1,19 +1,19 @@
-import { SignInForm } from '@/components/auth/sign-in-form';
-import { createClient } from '@/lib/supabase-server';
-import { redirect } from 'next/navigation';
+import { GalleryVerticalEnd } from "lucide-react"
 
-export default async function LoginPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+import { LoginForm } from "@/components/login-form"
 
-  // If user is already logged in, redirect to home
-  if (user) {
-    redirect('/');
-  }
-
+export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <SignInForm />
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <a href="#" className="flex items-center gap-2 self-center font-medium">
+          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+            <GalleryVerticalEnd className="size-4" />
+          </div>
+          Acme Inc.
+        </a>
+        <LoginForm />
+      </div>
     </div>
-  );
+  )
 }

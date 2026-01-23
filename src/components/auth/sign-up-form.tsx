@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { signUp } from '@/app/actions/auth';
+import { useRouter } from 'next/navigation';
+import { signUp } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,15 +12,27 @@ import Link from 'next/link';
 export function SignUpForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setError(null);
     setLoading(true);
 
-    const result = await signUp(formData);
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-    if (result?.error) {
-      setError(result.error);
+    try {
+      await signUp(email, password);
+      setSuccess(true);
+      setTimeout(() => {
+        router.push('/');
+        router.refresh();
+      }, 2000);
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during sign up');
       setLoading(false);
     }
   }
@@ -33,7 +46,7 @@ export function SignUpForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -62,8 +75,13 @@ export function SignUpForm() {
               {error}
             </div>
           )}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Creating account...' : 'Sign Up'}
+          {success && (
+            <div className="text-sm text-green-600 bg-green-50 p-3 rounded">
+              Account created successfully! Redirecting...
+            </div>
+          )}
+          <Button type="submit" className="w-full" disabled={loading || success}>
+            {loading ? 'Creating account...' : success ? 'Success!' : 'Sign Up'}
           </Button>
           <div className="text-center text-sm text-gray-600">
             Already have an account?{' '}

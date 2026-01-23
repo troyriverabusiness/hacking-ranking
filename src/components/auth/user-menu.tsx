@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User as UserIcon } from 'lucide-react';
-import { signOut } from '@/app/actions/auth';
+import { signOut } from '@/lib/auth';
 
 // Verified imports
 import type { Profile } from '@/models/profile';
@@ -26,6 +27,18 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ user, profile }: UserMenuProps) {
+  const router = useRouter();
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  }
+
   if (!user) {
     return (
       <div className="flex items-center gap-2">
@@ -79,7 +92,7 @@ export function UserMenu({ user, profile }: UserMenuProps) {
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => signOut()}
+          onClick={handleSignOut}
           className="text-red-600 focus:text-red-600"
         >
           <LogOut className="mr-2 h-4 w-4" />
