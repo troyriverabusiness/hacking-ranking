@@ -31,7 +31,7 @@ export function Navigation() {
           setProfile(null);
         }
       } catch (error) {
-        console.error('Navigation error:', error);
+        // Silently handle auth errors - user is not logged in
         setUser(null);
         setProfile(null);
       } finally {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, Trophy } from "lucide-react";
 import {
@@ -25,6 +26,12 @@ interface NavigationClientProps {
 }
 
 export function NavigationClient({ user, profile }: NavigationClientProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,14 +44,14 @@ export function NavigationClient({ user, profile }: NavigationClientProps) {
           </Link>
 
           {/* Mobile Navigation */}
-          <MobileNavigation user={user} profile={profile} />
+          {mounted && <MobileNavigation user={user} profile={profile} />}
 
           {/* Desktop Navigation - Centered Part */}
-          <DesktopNavigation />
+          {mounted && <DesktopNavigation />}
 
           {/* Desktop User Menu */}
           <div className="hidden md:flex items-center">
-            <UserMenu user={user} profile={profile} />
+            {mounted && <UserMenu user={user} profile={profile} />}
           </div>
         </div>
       </div>
