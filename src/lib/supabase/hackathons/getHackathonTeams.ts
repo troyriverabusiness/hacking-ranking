@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient";
+import { supabase } from "../../supabaseClient";
 import { Team } from "@/models/team";
 
 // Fetch all teams (ONLY TEAMS) for a given hackathon
