@@ -11,8 +11,10 @@ import { Badge } from "@/components/ui/badge";
 
 import { type Hackathon } from "@/models";
 import { getHackathon, getHackathonTeams, getTeamParticipants } from "@/lib/supabase/index";
-import { formatDateRangeLong } from "@/lib/mock-data";
-import { LeaderboardRow, type TeamWithCount, BackButton } from "./components";
+import { formatDateRangeLong } from "@/lib/date-formatting";
+import { LeaderboardTable, type TeamWithCount, BackButton, HackathonInProgress } from "./components";
+import { Loading } from "@/components/loading";
+import { Empty } from "@/components/empty";
 
 export default function HackathonDetailPage({
   params,
@@ -66,9 +68,7 @@ export default function HackathonDetailPage({
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-gray-500">Loading hackathon details...</div>
-        </div>
+        <Loading size="lg" text="Loading hackathon details..." className="py-12" />
       </div>
     );
   }
@@ -77,9 +77,11 @@ export default function HackathonDetailPage({
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <BackButton />
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Hackathon not found</p>
-        </div>
+        <Empty
+          icon={Calendar}
+          title="Hackathon not found"
+          description="The hackathon you're looking for doesn't exist or has been removed."
+        />
       </div>
     );
   }
@@ -124,42 +126,20 @@ export default function HackathonDetailPage({
 
       {/* Results Section - Only show if hackathon has ended */}
       {hasEnded && leaderboardTeams.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Results</h2>
-          <div className="border-y border-gray-200">
-            <div className="hidden md:grid md:grid-cols-[minmax(200px,1fr)_minmax(200px,1fr)_minmax(180px,1fr)] md:items-center md:bg-gray-50 md:px-2 md:py-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
-              <span>Rank</span>
-              <span>Team</span>
-              <span>Participants</span>
-            </div>
-            {leaderboardTeams.map((team) => (
-              <div key={team.id} className="border-t border-gray-200">
-                <LeaderboardRow team={team} />
-              </div>
-            ))}
-          </div>
-        </div>
+        <LeaderboardTable teams={leaderboardTeams} />
+      )}
+
+      {/* Empty state if hackathon has ended but no teams */}
+      {hasEnded && leaderboardTeams.length === 0 && (
+        <Empty
+          icon={Trophy}
+          title="No teams participated"
+          description="This hackathon has ended, but no teams were registered for the competition."
+        />
       )}
 
       {/* Message if hackathon hasn't ended */}
-      {!hasEnded && (
-        <div className="mb-8">
-          <Card className="p-8 text-center">
-            <Trophy className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Hackathon In Progress
-            </h3>
-            <p className="text-gray-600">
-              Results will be available after the hackathon ends on{" "}
-              {new Date(hackathon.end_timestamp).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </p>
-          </Card>
-        </div>
-      )}
+      {!hasEnded && <HackathonInProgress endTimestamp={hackathon.end_timestamp} />}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function BackButton() {
+export function BackButtonHackathons() {
   return (
     <Link href="/hackathons">
       <Button variant="ghost" className="mb-6 -ml-2">

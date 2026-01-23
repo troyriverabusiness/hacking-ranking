@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { formatDateRange, type Hackathon } from "@/lib/mock-data";
+import { formatDateRange } from "@/lib/date-formatting";
+import type { Hackathon } from "@/lib/mock-data";
 
 const NOW = typeof window === "undefined" ? undefined : new Date();
 
