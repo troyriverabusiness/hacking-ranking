@@ -19,9 +19,10 @@ import { locations, popularTopics, type Hackathon, type Topic } from "@/lib/mock
 type HackathonListProps = {
   hackathons: Hackathon[];
   initialView?: "grid" | "list";
+  loading?: boolean;
 };
 
-export function HackathonList({ hackathons, initialView = "grid" }: HackathonListProps) {
+export function HackathonList({ hackathons, initialView = "grid", loading = false }: HackathonListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [selectedTopic, setSelectedTopic] = useState<string>("all");
@@ -123,7 +124,11 @@ export function HackathonList({ hackathons, initialView = "grid" }: HackathonLis
         )}
       </div>
 
-      {filteredHackathons.length === 0 ? (
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500">Loading hackathons...</p>
+        </div>
+      ) : filteredHackathons.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500">No hackathons found matching your filters.</p>
           <Button variant="outline" onClick={clearFilters} className="mt-4">

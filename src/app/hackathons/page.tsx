@@ -1,9 +1,12 @@
 "use client";
 
+import * as React from "react";
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { HackathonList } from "@/components/hackathons/hackathon-list";
-import { mockHackathons } from "@/lib/mock-data";
+import { mockHackathons, type Hackathon } from "@/lib/mock-data";
+import { getAllHackathons } from "@/lib/supabase-queries";
 
 const HackathonMap = dynamic(
   () => import("@/components/hackathons/hackathon-map").then((mod) => mod.HackathonMap),
@@ -17,21 +20,56 @@ const HackathonMap = dynamic(
   }
 );
 
-export default function HackathonsPage() {
+function HackathonsPageContent() {
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
   const normalizedView = viewParam === "grid" || viewParam === "list" ? viewParam : undefined;
+
+  const [hackathons, setHackathons] = React.useState<Hackathon[]>(mockHackathons);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchHackathons() {
+      setLoading(true);
+      try {
+        const data = await getAllHackathons();
+
+        // Use mock data if no data from Supabase
+        if (data.length === 0) {
+          setHackathons(mockHackathons);
+        } else {
+          setHackathons(data);
+        }
+      } catch (error) {
+        console.error('Error fetching hackathons:', error);
+        // Fallback to mock data on error
+        setHackathons(mockHackathons);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchHackathons();
+  }, []);
 
   return (
     <div className="w-full" suppressHydrationWarning>
       <div className="grid grid-cols-1 sm:grid-cols-2 items-start">
         <div className="px-6 sm:px-8 lg:px-10 py-8 sm:pr-10">
-          <HackathonList hackathons={mockHackathons} initialView={normalizedView} />
+          <HackathonList hackathons={hackathons} initialView={normalizedView} loading={loading} />
         </div>
         <div className="hidden sm:block sm:sticky sm:top-16 sm:h-[calc(100vh-4rem)] sm:overflow-hidden">
-          <HackathonMap hackathons={mockHackathons} />
+          <HackathonMap hackathons={hackathons} />
         </div>
       </div>
     </div>
+  );
+}
+
+export default function HackathonsPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="text-gray-500">Loading...</div></div>}>
+      <HackathonsPageContent />
+    </Suspense>
   );
 }

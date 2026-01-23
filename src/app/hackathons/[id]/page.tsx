@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -23,13 +23,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  getHackathonById,
-  getTeamsByHackathonId,
+  getHackathonById as getMockHackathonById,
+  getTeamsByHackathonId as getMockTeamsByHackathonId,
   mockHackathons,
-  mockTeams,
   formatDateRangeLong,
   type Team,
+  type Hackathon,
 } from "@/lib/mock-data";
+import {
+  getHackathonById,
+  getTeamsByHackathonId,
+} from "@/lib/supabase-queries";
 
 function TeamMembersList({ team }: { team: Team }) {
   return (
@@ -156,14 +160,71 @@ export default function HackathonDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const [hackathon, setHackathon] = useState<Hackathon | null>(null);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // In real app, fetch by id. For now, use mock data
-  const hackathon = getHackathonById(id) || mockHackathons[0];
-  const teams = getTeamsByHackathonId(id);
-  
-  // If no teams found for this hackathon, use default mock teams
-  const displayTeams = teams.length > 0 ? teams : mockTeams;
-  const leaderboardTeams = [...displayTeams].sort((a, b) => a.rank - b.rank);
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const [hackathonData, teamsData] = await Promise.all([
+          getHackathonById(id),
+          getTeamsByHackathonId(id),
+        ]);
+
+        // Use mock data if no data from Supabase
+        if (!hackathonData) {
+          setHackathon(getMockHackathonById(id) || mockHackathons[0]);
+        } else {
+          setHackathon(hackathonData);
+        }
+
+        if (teamsData.length === 0) {
+          setTeams(getMockTeamsByHackathonId(id));
+        } else {
+          setTeams(teamsData);
+        }
+      } catch (error) {
+        console.error('Error fetching hackathon details:', error);
+        // Fallback to mock data on error
+        setHackathon(getMockHackathonById(id) || mockHackathons[0]);
+        setTeams(getMockTeamsByHackathonId(id));
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [id]);
+
+  const leaderboardTeams = [...teams].sort((a, b) => a.rank - b.rank);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-gray-500">Loading hackathon details...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hackathon) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Link href="/hackathons">
+          <Button variant="ghost" className="mb-6 -ml-2">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Hackathons
+          </Button>
+        </Link>
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">Hackathon not found</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
