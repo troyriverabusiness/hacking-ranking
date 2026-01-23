@@ -21,7 +21,7 @@ export function Empty({
   className,
 }: EmptyProps) {
   return (
-    <Card className={`flex flex-col items-center justify-center p-12 text-center ${className || ""}`}>
+    <Card className={`flex flex-col items-center justify-center p-12 text-center border-none shadow-none ${className || ""}`}>
       <Icon className="h-12 w-12 text-muted-foreground mb-4" />
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <p className="text-sm text-muted-foreground mb-6 max-w-sm">

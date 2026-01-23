@@ -3,6 +3,7 @@
 import type { LatLngExpression } from "leaflet";
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
 import type { Hackathon } from "@/lib/mock-data";
+import { useRouter } from "next/navigation";
 
 
 const locationCoordinates: Record<string, LatLngExpression> = {
@@ -17,6 +18,8 @@ const defaultCoordinate: LatLngExpression = [50.11, 8.68];
 const offsetStep = 0.08;
 
 export function HackathonMap({ hackathons }: { hackathons: Hackathon[] }) {
+  const router = useRouter();
+
   const groupedByLocation = hackathons.reduce<Record<string, Hackathon[]>>(
     (acc, hackathon) => {
       const locationKey = hackathon.location;
@@ -70,6 +73,11 @@ export function HackathonMap({ hackathons }: { hackathons: Hackathon[] }) {
               color: "#5C88F6",
               fillColor: "#83C3E6",
               fillOpacity: 0.6,
+            }}
+            eventHandlers={{
+              click: () => {
+                router.push(`/hackathons/${marker.id}`);
+              },
             }}
           >
             <Tooltip direction="top" offset={[0, -6]} opacity={1}>
