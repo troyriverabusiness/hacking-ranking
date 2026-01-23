@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "@/lib/auth";
-import { getProfile } from "@/lib/supabase/index";
+import { getProfile } from "@/lib/supabase";
+import { supabase } from "@/lib/supabaseClient";
 import { NavigationClient } from "./navigation-client";
 import type { Profile } from "@/models/profile";
-import type { User } from "@supabase/supabase-js";
 
 export function Navigation() {
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
@@ -40,6 +40,27 @@ export function Navigation() {
     }
 
     loadUser();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        const userForClient = {
+          id: session.user.id,
+          email: session.user.email || ''
+        };
+        setUser(userForClient);
+
+        const userProfile = await getProfile(session.user.id);
+        setProfile(userProfile);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setProfile(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   if (loading) {

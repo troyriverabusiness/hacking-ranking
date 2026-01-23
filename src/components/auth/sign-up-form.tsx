@@ -27,10 +27,11 @@ export function SignUpForm() {
     try {
       await signUp(email, password);
       setSuccess(true);
+      // Redirect to profile setup page to complete profile
       setTimeout(() => {
-        router.push('/');
+        router.push('/profile/setup');
         router.refresh();
-      }, 2000);
+      }, 1000);
     } catch (err: any) {
       setError(err.message || 'An error occurred during sign up');
       setLoading(false);

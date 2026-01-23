@@ -7,3 +7,6 @@ export { getLeaderboard, getLeaderboard100 } from './getLeaderboard';
 export { getRankHistory } from './getRankHistory';
 export { createNewHackathon } from './createNewHackathon';
 export { getAllProfiles } from './getAllProfiles';
+export { checkUsernameAvailability } from './checkUsername';
+export { createProfile } from './createProfile';
+export { updateProfile } from './updateProfile';

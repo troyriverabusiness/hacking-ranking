@@ -1,4 +1,4 @@
-import { supabase } from "../supabase";
+import { supabase } from "../supabaseClient";
 import { Profile } from "@/models/profile";
 
 // Fetch a single profile

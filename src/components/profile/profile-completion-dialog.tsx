@@ -20,8 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { University } from '@/models';
-
-// TODO: Import createProfile and updateProfile from supabase queries when implemented
+import { createProfile, updateProfile, checkUsernameAvailability } from '@/lib/supabase/index';
 
 interface ProfileCompletionDialogProps {
   userId: string;
@@ -69,6 +68,22 @@ export function ProfileCompletionDialog({
       return;
     }
 
+    // Check username availability for new profiles
+    if (isNewProfile && username) {
+      try {
+        const isAvailable = await checkUsernameAvailability(username);
+        if (!isAvailable) {
+          setError('Username is already taken. Please choose another one.');
+          setLoading(false);
+          return;
+        }
+      } catch (err: any) {
+        setError('Failed to check username availability. Please try again.');
+        setLoading(false);
+        return;
+      }
+    }
+
     let result;
     if (isNewProfile) {
       result = await createProfile({
@@ -94,6 +109,8 @@ export function ProfileCompletionDialog({
       return;
     }
 
+    // Redirect to the user's profile page after successful creation
+    router.push(`/profile/${userId}`);
     router.refresh();
   }
 

@@ -14,8 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { University } from '@/models';
-
-// TODO: Import createProfile from supabase queries when implemented
+import { createProfile } from '@/lib/supabase';
 
 interface ProfileCreationFormProps {
   userId: string;
