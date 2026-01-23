@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { MapPin, Calendar } from "lucide-react";
+
+import { type Hackathon } from "@/models";
 import { formatDateRangeCompact } from "@/lib/date-formatting";
-import type { Hackathon } from "@/lib/mock-data";
+
 
 export function HackathonListItem({ hackathon }: { hackathon: Hackathon }) {
   return (

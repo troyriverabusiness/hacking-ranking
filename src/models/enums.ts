@@ -1,5 +1,5 @@
 // ==============================================
-// Enums
+// Enum Types
 // ==============================================
 
 export type Location = "Munich" | "Paris" | "London" | "Berlin" | "Zurich";
@@ -38,3 +38,23 @@ export type University = "TUM" | "LMU" | "HM";
 
 // User roles
 export type Role = "user" | "admin" | "organizer";
+
+
+// =============================================================================
+// Enum values for filters
+// =============================================================================
+
+export const locations: Location[] = ["Munich", "Paris", "London", "Berlin", "Zurich"];
+
+export const popularTopics: Topic[] = [
+    "AI",
+    "Blockchain",
+    "Healthcare",
+    "Fintech",
+    "Gaming",
+    "Sustainability",
+]
+
+export const universities: University[] = ["TUM", "LMU", "HM"];
+
+export const roles: Role[] = ["user", "admin", "organizer"];

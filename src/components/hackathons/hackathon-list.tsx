@@ -1,20 +1,17 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { LayoutGrid, List, Search, X } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { HackathonCard } from "@/components/hackathons/hackathon-card";
 import { HackathonListItem } from "@/components/hackathons/hackathon-list-item";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { locations, popularTopics, type Hackathon, type Topic } from "@/lib/mock-data";
+import { HackathonSearch } from "@/components/hackathons/hackathon-search";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Loading } from "@/components/loading";
+import { Empty } from "@/components/empty";
+
+// Verified imports
+import { type Hackathon } from "@/models";
+import { type Topic } from "@/models/enums";
 
 type HackathonListProps = {
   hackathons: Hackathon[];
@@ -32,6 +29,7 @@ export function HackathonList({ hackathons, initialView = "grid", loading = fals
     setView(initialView);
   }, [initialView]);
 
+  // Filter logic
   const filteredHackathons = useMemo(() => {
     return hackathons.filter((hackathon) => {
       const matchesSearch = hackathon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,92 +48,37 @@ export function HackathonList({ hackathons, initialView = "grid", loading = fals
     setSelectedTopic("all");
   };
  
-  const hasActiveFilters = searchQuery || selectedLocation !== "all" || selectedTopic !== "all";
+  const hasActiveFilters = searchQuery !== "" || selectedLocation !== "all" || selectedTopic !== "all";
  
   return (
     <Tabs value={view} onValueChange={(value) => setView(value as "grid" | "list")} className="w-full space-y-8">
-
-      <header className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Hackathons</h1>
-          <p className="text-gray-600 mt-1">
-            Browse and explore hackathon events
-          </p>
-        </div>
-        <TabsList>
-          <TabsTrigger value="grid">
-            <LayoutGrid className="h-4 w-4" />
-          </TabsTrigger>
-          <TabsTrigger value="list">
-            <List className="h-4 w-4" />
-          </TabsTrigger>
-        </TabsList>
-      </header>
-
-      <div className="flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[240px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <Input
-            type="text"
-            placeholder="Search hackathons..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 border-blue-200 focus-visible:border-blue-400 focus-visible:ring-blue-200/50"
-          />
-        </div>
-
-        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-          <SelectTrigger className="w-[180px] border-blue-200 data-[state=open]:border-blue-400">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="all" className="hover:bg-accent">All Locations</SelectItem>
-            {locations.map((location) => (
-              <SelectItem key={location} value={location} className="hover:bg-accent">
-                {location}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-          <SelectTrigger className="w-[180px] border-blue-200 data-[state=open]:border-blue-400">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="all" className="hover:bg-accent">All Topics</SelectItem>
-            {popularTopics.map((topic) => (
-              <SelectItem key={topic} value={topic} className="hover:bg-accent">
-                {topic}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {hasActiveFilters && (
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={clearFilters}
-            title="Clear filters"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+      <HackathonSearch
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedLocation={selectedLocation}
+        onLocationChange={setSelectedLocation}
+        selectedTopic={selectedTopic}
+        onTopicChange={setSelectedTopic}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={clearFilters}
+      />
 
       {loading ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500">Loading hackathons...</p>
+        <div className="py-12">
+          <Loading size="lg" text="Loading hackathons..." />
         </div>
       ) : filteredHackathons.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No hackathons found matching your filters.</p>
-          <Button variant="outline" onClick={clearFilters} className="mt-4">
-            Clear filters
-          </Button>
-        </div>
+        <Empty
+          icon={Calendar}
+          title="No hackathons found"
+          description="No hackathons match your current filters. Try adjusting your search criteria or clearing the filters."
+          action={{
+            label: "Clear filters",
+            onClick: clearFilters,
+          }}
+        />
       ) : (
+        // Actual Card/Grid View
         <>
           <TabsContent value="grid">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 lg:gap-8">
