@@ -7,7 +7,8 @@ import {
 } from "lucide-react";
 
 import { type Team, type Hackathon } from "@/models";
-import { getHackathon, getHackathonTeams, getTeamParticipants } from "@/lib/supabase/index";
+import { getHackathon } from "@/lib/supabase/hackathons/getHackathon";
+import { getHackathonTeams } from "@/lib/supabase/hackathons/getHackathonTeams";
 import { LeaderboardTable, BackButtonHackathons, HackathonInProgress, HackathonHero } from "./components";
 import { Loading } from "@/components/loading";
 import { Empty } from "@/components/empty";

@@ -3,7 +3,7 @@
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { Profile } from "@/models";
-import { getProfile, getAllProfiles } from "@/lib/supabase";
+import { getProfile } from "@/lib/supabase/profile/getProfile";
 import { getCurrentUser, signOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { LogOut, UserX } from "lucide-react";
@@ -33,7 +33,6 @@ export default function ProfilePage({
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [participations, setParticipations] = useState<HackathonParticipation[]>([]);
-  const [allProfiles, setAllProfiles] = useState<Profile[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -41,9 +40,8 @@ export default function ProfilePage({
     async function fetchData() {
       setLoading(true);
       try {
-        const [profileData, allProfilesData, currentUser] = await Promise.all([
+        const [profileData, currentUser] = await Promise.all([
           getProfile(id),
-          getAllProfiles(),
           getCurrentUser(),
         ]);
 
@@ -54,13 +52,11 @@ export default function ProfilePage({
         }
 
         setParticipations([]); // TODO: Implement getHackathonParticipations
-        setAllProfiles(allProfilesData || []);
         setCurrentUserId(currentUser?.id || null);
       } catch (error) {
         console.error('Error fetching profile data:', error);
         setProfile(null);
         setParticipations([]);
-        setAllProfiles([]);
         setCurrentUserId(null);
       } finally {
         setLoading(false);
@@ -75,7 +71,6 @@ export default function ProfilePage({
     totalHackathons: participations.length,
     totalWins: participations.filter((p) => p.rank === 1).length,
     topThreeFinishes: participations.filter((p) => p.rank <= 3).length,
-    currentRank: allProfiles.findIndex((p) => p.id === id) + 1 || 1,
   };
 
   // Check if this is the current user's profile
@@ -123,7 +118,6 @@ export default function ProfilePage({
       {/* Stats Grid */}
       <div className="mb-8">
         <ProfileStats
-          currentRank={stats.currentRank}
           totalHackathons={stats.totalHackathons}
           totalWins={stats.totalWins}
           topThreeFinishes={stats.topThreeFinishes}

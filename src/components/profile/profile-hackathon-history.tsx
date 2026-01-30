@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Loading } from "@/components/loading";
 import { Empty } from "@/components/empty";
 import { Hackathon } from "@/models/hackathon";
-import { getHackathonParticipations } from "@/lib/supabase/getHackathonParticipations";
+import { getHackathonParticipations } from "@/lib/supabase/profile/getHackathonParticipations";
 
 
 export function ProfileHackathonHistory({

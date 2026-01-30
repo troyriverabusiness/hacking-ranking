@@ -10,7 +10,7 @@ import { Loading } from "@/components/loading";
 
 import { type Hackathon } from "@/models";
 
-import { getAllHackathons } from "@/lib/supabase/index";
+import { getAllHackathons } from "@/lib/supabase/hackathons/getAllHackathons";
 
 
 const HackathonMap = dynamic(
