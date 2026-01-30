@@ -16,14 +16,14 @@ export function TropicalFloaters() {
   const [elements, setElements] = useState<FloatingElement[]>([]);
 
   useEffect(() => {
-    const floaters: FloatingElement[] = Array.from({ length: 20 }, (_, i) => ({
+    const floaters: FloatingElement[] = Array.from({ length: 12 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      delay: Math.random() * 5,
-      duration: 15 + Math.random() * 10,
+      delay: Math.random() * 8,
+      duration: 20 + Math.random() * 15,
       rotation: Math.random() * 360,
-      type: ['leaf', 'palm', 'flower', 'bubble'][Math.floor(Math.random() * 4)] as FloatingElement['type']
+      type: ['leaf', 'bubble'][Math.floor(Math.random() * 2)] as FloatingElement['type']
     }));
     setElements(floaters);
   }, []);
@@ -43,10 +43,10 @@ export function TropicalFloaters() {
         >
           {element.type === 'leaf' && (
             <svg
-              width="30"
-              height="30"
+              width="25"
+              height="25"
               viewBox="0 0 30 30"
-              className="opacity-40 drop-shadow-lg"
+              className="opacity-20 drop-shadow-md"
               style={{
                 animation: `spin ${element.duration}s linear infinite`,
                 animationDelay: `${element.delay}s`
@@ -120,10 +120,10 @@ export function TropicalFloaters() {
 
           {element.type === 'bubble' && (
             <svg
-              width="20"
-              height="20"
+              width="15"
+              height="15"
               viewBox="0 0 20 20"
-              className="opacity-40"
+              className="opacity-25"
               style={{
                 animation: `float ${element.duration * 0.7}s ease-in-out infinite`,
                 animationDelay: `${element.delay}s`

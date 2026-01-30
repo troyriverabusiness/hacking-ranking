@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { LeaderboardRow } from "@/components/leaderboard/leaderboard-row";
 import { PodiumCard } from "@/components/leaderboard/podium-card";
+import { TropicalBackground } from "@/components/leaderboard/tropical-background";
 
 import { getAllProfiles } from "@/lib/supabase/index";
 
@@ -78,14 +79,20 @@ export function LeaderboardContent({ location, topic }: LeaderboardContentProps)
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        {podium.map((profile, index) => (
-          <PodiumCard key={profile.id} profile={profile} rank={index + 1} />
-        ))}
-      </div>
+      {/* Tropical Podium Section */}
+      <TropicalBackground>
+        <div className="container mx-auto px-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-end max-w-4xl mx-auto">
+            {podium.map((profile, index) => (
+              <PodiumCard key={profile.id} profile={profile} rank={index + 1} />
+            ))}
+          </div>
+        </div>
+      </TropicalBackground>
 
+      {/* Rest of leaderboard */}
       {rest.length > 0 && (
-        <div className="border-t border-gray-200">
+        <div className="border-t border-gray-200 bg-white mt-8">
           <div className="grid grid-cols-[72px_minmax(0,1fr)_96px] items-center px-4 sm:px-6 py-2 text-xs uppercase tracking-wide text-gray-500 border-b border-blue-200">
             <span>Pos</span>
             <span>Name</span>
