@@ -2,21 +2,21 @@
 @import "leaflet/dist/leaflet.css";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: 0 0% 100%;
+  --color-foreground: 0 0% 9%;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
+  --color-ring: 217 91% 60%;
+  --color-input: 220 13% 91%;
+  --color-border: 220 13% 91%;
+  --color-accent-foreground: 0 0% 9%;
+  --color-accent: 220 13% 95%;
+  --color-muted-foreground: 220 9% 46%;
+  --color-muted: 220 13% 95%;
+  --color-primary-foreground: 0 0% 100%;
+  --color-primary: 217 91% 60%;
+  --color-popover-foreground: 0 0% 9%;
+  --color-popover: 0 0% 100%;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -43,6 +43,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -53,6 +54,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

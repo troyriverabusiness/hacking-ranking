@@ -7,6 +7,7 @@ import { GalleryVerticalEnd } from "lucide-react";
 
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { LinkUploadCard } from "@/components/hackathons/link-upload-card";
+import { Separator } from "@/components/ui/separator";
 
 
 export default function CreateHackathonImprovedPage() {
@@ -28,11 +29,11 @@ export default function CreateHackathonImprovedPage() {
   };
 
   return(
-    <div className="grid min-h-svh lg:grid-cols-2">
+    <div className="grid h-[calc(100vh-4rem)] lg:grid-cols-2 relative">
 
       {/* Left side = background + link input */}
       <div className="bg-muted relative hidden lg:block">
-        <div className="relative z-10 flex items-center justify-center min-h-screen p-6">
+        <div className="relative z-10 flex items-center justify-center h-full p-6">
           <div className="w-full max-w-md">
             <LinkUploadCard />
           </div>
@@ -40,24 +41,17 @@ export default function CreateHackathonImprovedPage() {
         <BackgroundBeams />
       </div>
 
+      {/* Vertical Divider */}
+      <Separator orientation="vertical" className="absolute left-1/2 top-0 bottom-0 hidden lg:block bg-gray-300 w-px" />
+
       {/* Right side = Actual form */}
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <a href="#" className="flex items-center gap-2 font-medium">
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-4" />
-            </div>
-            Powered by Blau Tech©
-          </a>
-        </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
+      <div className="flex flex-col p-6 md:p-10">
+        <div className="flex flex-1 justify-center">
+          <div className="w-full max-w-2xl h-full">
             <CreateHackathonForm />
           </div>
         </div>
       </div>
-
-      
       
     </div>
   );
