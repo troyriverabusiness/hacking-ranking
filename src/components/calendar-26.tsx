@@ -54,9 +54,9 @@ export default function Calendar26({
   const setDateTo = onDateToChange || setInternalDateTo;
 
   return (
-    <div className="flex w-full min-w-0 justify-between gap-6">
-      <div className="flex gap-4">
-        <div className="flex flex-1 flex-col gap-3">
+    <div className="flex w-full min-w-0 gap-6">
+      <div className="flex min-w-0 flex-1 gap-4">
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
           <Label htmlFor="date-from" className="px-1">
             Start
           </Label>
@@ -65,16 +65,18 @@ export default function Calendar26({
               <Button
                 variant="outline"
                 id="date-from"
-                className="w-full justify-between font-normal bg-white border-blue-300 hover:bg-blue-50 focus:border-blue-400 focus:ring-blue-400"
+                className="w-full min-w-0 justify-between font-normal bg-white border-blue-300 hover:bg-blue-50 focus:border-blue-400 focus:ring-blue-400"
               >
-                {dateFrom
-                  ? dateFrom.toLocaleDateString("en-US", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })
-                  : "Select date"}
-                <ChevronDownIcon />
+                <span className="truncate">
+                  {dateFrom
+                    ? dateFrom.toLocaleDateString("en-US", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "Select date"}
+                </span>
+                <ChevronDownIcon className="shrink-0" />
               </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -93,7 +95,7 @@ export default function Calendar26({
             </PopoverContent>
           </Popover>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex shrink-0 flex-col gap-3">
           <Label htmlFor="time-from" className="invisible px-1">
             From
           </Label>
@@ -107,8 +109,8 @@ export default function Calendar26({
           />
         </div>
       </div>
-      <div className="flex gap-4">
-        <div className="flex flex-1 flex-col gap-3">
+      <div className="flex min-w-0 flex-1 gap-4">
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
           <Label htmlFor="date-to" className="px-1">
             End
           </Label>
@@ -117,16 +119,18 @@ export default function Calendar26({
               <Button
                 variant="outline"
                 id="date-to"
-                className="w-full justify-between font-normal bg-white border-blue-300 hover:bg-blue-50 focus:border-blue-400 focus:ring-blue-400"
+                className="w-full min-w-0 justify-between font-normal bg-white border-blue-300 hover:bg-blue-50 focus:border-blue-400 focus:ring-blue-400"
               >
-                {dateTo
-                  ? dateTo.toLocaleDateString("en-US", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })
-                  : "Select date"}
-                <ChevronDownIcon />
+                <span className="truncate">
+                  {dateTo
+                    ? dateTo.toLocaleDateString("en-US", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "Select date"}
+                </span>
+                <ChevronDownIcon className="shrink-0" />
               </Button>
             </PopoverTrigger>
             <PopoverContent
@@ -146,7 +150,7 @@ export default function Calendar26({
             </PopoverContent>
           </Popover>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex shrink-0 flex-col gap-3">
           <Label htmlFor="time-to" className="invisible px-1">
             To
           </Label>

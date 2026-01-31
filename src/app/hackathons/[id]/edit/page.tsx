@@ -10,10 +10,11 @@ import { Button } from "@/components/ui/button";
 
 import { getHackathon } from "@/lib/supabase/getHackathon";
 import { updateHackathon } from "@/lib/supabase/updateHackathon";
-import type { Hackathon } from "@/models/hackathon";
+import type { Hackathon, ChallengeTrack } from "@/models";
 import type { HackathonFormData } from "@/components/hackathons/create-hackathon-form";
 
 import { ChallengeTracksOverview } from "@/components/hackathons/challenge-tracks-overview";
+import { getHackathonTracks } from "@/lib/supabase/getHackathonTracks";
 
 
 export default function EditHackathonPage() {
@@ -111,10 +112,10 @@ export default function EditHackathonPage() {
   };
 
   return (
-    <div className="grid h-[calc(100vh-4rem)] lg:grid-cols-2 relative">
+    <div className="grid h-[calc(100vh-4rem)] lg:grid-cols-[45%_55%] relative overflow-x-hidden">
 
       {/* Left side = Edit form */}
-      <div className="flex flex-col p-6 md:p-10 bg-white">
+      <div className="flex min-w-0 flex-col overflow-hidden p-6 md:p-10 bg-white">
         <Link href={`/hackathons/${hackathonId}`}>
           <Button variant="ghost" className="mb-6 -ml-2">
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -145,11 +146,12 @@ export default function EditHackathonPage() {
       </div>
 
       {/* Vertical Divider */}
-      <Separator orientation="vertical" className="absolute left-1/2 top-0 bottom-0 hidden lg:block bg-gray-300 w-px" />
+      <Separator orientation="vertical" className="absolute left-[45%] top-0 bottom-0 hidden lg:block bg-gray-300 w-px" />
 
       {/* Right side = Challenge Tracks */}
-      <ChallengeTracksOverview />
-
+      <div className="flex min-w-0 flex-col overflow-auto p-6 md:p-10">
+        <ChallengeTracksOverview hackathonId={hackathonId} />
+      </div>
     </div>
   );
 }
