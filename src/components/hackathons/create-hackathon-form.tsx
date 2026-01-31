@@ -34,6 +34,8 @@ interface CreateHackathonFormProps {
     onFormSubmit?: (data: HackathonFormData) => void;
     onCancel?: () => void;
     isLoading?: boolean;
+    initialData?: HackathonFormData;
+    mode?: "create" | "edit";
 }
 
 export function CreateHackathonForm({
@@ -41,13 +43,27 @@ export function CreateHackathonForm({
     onFormSubmit,
     onCancel,
     isLoading = false,
+    initialData,
+    mode = "create",
 }: CreateHackathonFormProps) {
-    const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
-    const [selectedLocation, setSelectedLocation] = useState<Location | "">("");
-    const [dateFrom, setDateFrom] = useState<Date | undefined>(new Date("2025-06-01"));
-    const [dateTo, setDateTo] = useState<Date | undefined>(new Date("2025-06-03"));
-    const [timeFrom, setTimeFrom] = useState<string>("10:30:00");
-    const [timeTo, setTimeTo] = useState<string>("12:30:00");
+    // Parse initial data if provided
+    const parseInitialDateTime = (timestamp?: string) => {
+        if (!timestamp) return undefined;
+        return new Date(timestamp);
+    };
+
+    const parseInitialTime = (timestamp?: string) => {
+        if (!timestamp) return "10:30:00";
+        const date = new Date(timestamp);
+        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+    };
+
+    const [selectedTopics, setSelectedTopics] = useState<Topic[]>(initialData?.topics || []);
+    const [selectedLocation, setSelectedLocation] = useState<Location | "">(initialData?.location || "");
+    const [dateFrom, setDateFrom] = useState<Date | undefined>(parseInitialDateTime(initialData?.start_timestamp) || new Date("2025-06-01"));
+    const [dateTo, setDateTo] = useState<Date | undefined>(parseInitialDateTime(initialData?.end_timestamp) || new Date("2025-06-03"));
+    const [timeFrom, setTimeFrom] = useState<string>(parseInitialTime(initialData?.start_timestamp) || "10:30:00");
+    const [timeTo, setTimeTo] = useState<string>(parseInitialTime(initialData?.end_timestamp) || "12:30:00");
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -85,7 +101,7 @@ export function CreateHackathonForm({
         <form className={cn("flex flex-col h-full", className)} onSubmit={handleSubmit}>
             <FieldGroup className="flex flex-col h-full">
                 <FieldSet className="flex-1 flex flex-col justify-center">
-                    <FieldLegend>Create Hackathon</FieldLegend>
+                    <FieldLegend>{mode === "edit" ? "Edit Hackathon" : "Create Hackathon"}</FieldLegend>
                     <FieldDescription>
                         Fill in the details of your hackathon.
                     </FieldDescription>
@@ -100,6 +116,7 @@ export function CreateHackathonForm({
                                     name="name"
                                     placeholder="e.g. Blau Tech Hacks"
                                     required
+                                    defaultValue={initialData?.name}
                                     className="bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400"
                                 />
                             </Field>
@@ -131,6 +148,7 @@ export function CreateHackathonForm({
                                 id="checkout-7j9-optional-comments"
                                 name="description"
                                 placeholder="Describe your hackathon"
+                                defaultValue={initialData?.description}
                                 className="resize-none bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400"
                             />
                             <FieldDescription>
@@ -158,11 +176,16 @@ export function CreateHackathonForm({
                     </FieldGroup>
                 </FieldSet>
                 <Field orientation="horizontal" className="mt-auto pt-6">
-                    <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
-                        Cancel
-                    </Button>
+                    {mode === "create" && (
+                        <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
+                            Cancel
+                        </Button>
+                    )}
                     <Button type="submit" disabled={isLoading}>
-                        {isLoading ? "Creating..." : "Submit"}
+                        {isLoading
+                            ? (mode === "edit" ? "Updating..." : "Creating...")
+                            : (mode === "edit" ? "Update" : "Submit")
+                        }
                     </Button>
                 </Field>
             </FieldGroup>

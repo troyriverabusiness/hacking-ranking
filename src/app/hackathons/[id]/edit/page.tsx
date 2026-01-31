@@ -1,153 +1,155 @@
 "use client";
 
-import { use, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { HackathonForm } from "@/components/hackathons/hackathon-form";
-import { getHackathon, updateHackathon } from "@/lib/supabase/index";
-import { getCurrentUser } from "@/lib/auth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loading } from "@/components/loading";
-import { Empty } from "@/components/empty";
-import { AlertCircle } from "lucide-react";
-import type { Hackathon } from "@/models";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { CreateHackathonForm } from "@/components/hackathons/create-hackathon-form";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
-export default function EditHackathonPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+import { getHackathon } from "@/lib/supabase/getHackathon";
+import { updateHackathon } from "@/lib/supabase/updateHackathon";
+import type { Hackathon } from "@/models/hackathon";
+import type { HackathonFormData } from "@/components/hackathons/create-hackathon-form";
+
+import { ChallengeTracksOverview } from "@/components/hackathons/challenge-tracks-overview";
+
+
+export default function EditHackathonPage() {
   const router = useRouter();
-  const [hackathon, setHackathon] = useState<Hackathon | null>(null);
+  const params = useParams();
+  const hackathonId = params.id as string;
+
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [hackathon, setHackathon] = useState<Hackathon | null>(null);
 
+  // Fetch hackathon data on mount
   useEffect(() => {
-    async function fetchData() {
+    const fetchHackathon = async () => {
       setIsFetching(true);
       try {
-        const [hackathonData, user] = await Promise.all([
-          getHackathon(id),
-          getCurrentUser(),
-        ]);
-
-        if (!hackathonData) {
+        const data = await getHackathon(hackathonId);
+        if (data) {
+          setHackathon(data);
+        } else {
           setError("Hackathon not found");
-          setIsFetching(false);
-          return;
         }
-
-        if (!user) {
-          setError("You must be logged in to edit a hackathon");
-          setIsFetching(false);
-          return;
-        }
-
-        if (hackathonData.created_by !== user.id) {
-          setError("You are not authorized to edit this hackathon");
-          setIsFetching(false);
-          return;
-        }
-
-        setHackathon(hackathonData);
-        setIsAuthorized(true);
       } catch (err) {
-        console.error("Error fetching hackathon:", err);
-        setError("Failed to load hackathon details");
+        setError(err instanceof Error ? err.message : "Failed to fetch hackathon");
       } finally {
         setIsFetching(false);
       }
-    }
+    };
 
-    fetchData();
-  }, [id]);
+    fetchHackathon();
+  }, [hackathonId]);
 
-  const handleSubmit = async (data: Omit<Hackathon, "id">) => {
+  // Update hackathon
+  const handleSubmit = async (data: HackathonFormData) => {
     setError(null);
+    setSuccess(null);
     setIsLoading(true);
 
     try {
-      const updatedHackathon = await updateHackathon(id, data);
+      const result = await updateHackathon(hackathonId, data);
 
-      if (!updatedHackathon) {
-        setError("Failed to update hackathon. Please try again.");
-        setIsLoading(false);
-        return;
+      if (result) {
+        console.log("Hackathon updated successfully!", result);
+        setHackathon(result);
+        setSuccess("Hackathon updated successfully!");
+
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setSuccess(null);
+        }, 3000);
+      } else {
+        setError("Failed to update hackathon");
       }
-
-      // Redirect back to the hackathon detail page
-      router.push(`/hackathons/${id}`);
-      router.refresh();
     } catch (err) {
-      console.error("Error updating hackathon:", err);
-      setError("An unexpected error occurred. Please try again.");
+      setError(err instanceof Error ? err.message : "Failed to update hackathon");
+    } finally {
       setIsLoading(false);
     }
   };
 
+  // Return to hackathon detail page
   const handleCancel = () => {
-    router.push(`/hackathons/${id}`);
+    router.push(`/hackathons/${hackathonId}`);
   };
 
   if (isFetching) {
     return (
-      <div className="container mx-auto py-10">
-        <Loading size="lg" text="Loading hackathon..." className="py-12" />
+      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <p className="text-gray-600">Loading hackathon...</p>
+        </div>
       </div>
     );
   }
 
-  if (!isAuthorized || error) {
+  if (!hackathon) {
     return (
-      <div className="container mx-auto py-10">
-        <Card className="max-w-3xl mx-auto border-red-200">
-          <CardContent className="pt-6">
-            <Empty
-              icon={AlertCircle}
-              title="Access Denied"
-              description={error || "You don't have permission to edit this hackathon."}
-            />
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={() => router.push(`/hackathons/${id}`)}
-                className="text-blue-600 hover:text-blue-700 underline"
-              >
-                Go back to hackathon
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <p className="text-red-600">Hackathon not found</p>
+        </div>
       </div>
     );
   }
+
+  const initialData: HackathonFormData = {
+    name: hackathon.name,
+    description: hackathon.description,
+    location: hackathon.location,
+    start_timestamp: hackathon.start_timestamp,
+    end_timestamp: hackathon.end_timestamp,
+    topics: hackathon.topics,
+  };
 
   return (
-    <div className="container mx-auto py-10">
-      <Card className="max-w-3xl mx-auto border-blue-200">
-        <CardHeader>
-          <CardTitle>Edit Hackathon</CardTitle>
-          <CardDescription>
-            Update the details of your hackathon event
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <div className="mb-6 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-200">
-              {error}
-            </div>
-          )}
-          {hackathon && (
-            <HackathonForm
-              initialData={hackathon}
-              onSubmit={handleSubmit}
+    <div className="grid h-[calc(100vh-4rem)] lg:grid-cols-2 relative">
+
+      {/* Left side = Edit form */}
+      <div className="flex flex-col p-6 md:p-10 bg-white">
+        <Link href={`/hackathons/${hackathonId}`}>
+          <Button variant="ghost" className="mb-6 -ml-2">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Hackathon
+          </Button>
+        </Link>
+        <div className="flex flex-1 justify-center">
+          <div className="w-full h-full">
+            {error && (
+              <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md text-red-700">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md text-green-700">
+                {success}
+              </div>
+            )}
+            <CreateHackathonForm
+              onFormSubmit={handleSubmit}
               onCancel={handleCancel}
               isLoading={isLoading}
+              initialData={initialData}
+              mode="edit"
             />
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Vertical Divider */}
+      <Separator orientation="vertical" className="absolute left-1/2 top-0 bottom-0 hidden lg:block bg-gray-300 w-px" />
+
+      {/* Right side = Challenge Tracks */}
+      <ChallengeTracksOverview />
+
     </div>
   );
 }
