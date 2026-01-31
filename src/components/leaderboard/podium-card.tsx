@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Profile } from "@/models/profile";
+import { EncryptedText } from "@/components/ui/encrypted-text";
 
 const podiumIconMap = {
   1: { Icon: Trophy, className: "text-amber-500" },
@@ -32,10 +33,29 @@ export function PodiumCard({ profile, rank }: { profile: Profile; rank: number }
                 {profile.full_name.split(" ").map((n) => n[0]).join("")}
               </AvatarFallback>
             </Avatar>
-            <h3 className="font-semibold text-gray-900">{profile.full_name}</h3>
-            <p className="text-sm text-gray-500">@{profile.username}</p>
+            <h3 className="font-semibold text-gray-900">
+              <EncryptedText
+                text={profile.full_name}
+                encryptedClassName="text-gray-900"
+                revealedClassName="font-semibold text-gray-900"
+                revealDelayMs={80}
+              />
+            </h3>
+            <p className="text-sm text-gray-500">
+              <EncryptedText
+                text={`@${profile.username}`}
+                encryptedClassName="text-gray-500"
+                revealedClassName="text-sm text-gray-500"
+                revealDelayMs={80}
+              />
+            </p>
             <p className="text-blue-600 font-bold text-lg mt-1">
-              {profile.elo.toFixed(0)} ELO
+              <EncryptedText
+                text={`${profile.elo.toFixed(0)} ELO`}
+                encryptedClassName="text-blue-600"
+                revealedClassName="text-blue-600 font-bold text-lg"
+                revealDelayMs={80}
+              />
             </p>
             {profile.university && (
               <Badge variant="secondary" className="mt-2">

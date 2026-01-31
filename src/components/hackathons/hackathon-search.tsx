@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { locations, popularTopics } from "@/models/enums";
+import { NewHackathonButton } from "./new-hackathon-button";
 
 type HackathonSearchProps = {
   searchQuery: string;
@@ -150,7 +151,10 @@ export function HackathonSearch({
     <>
       <header className="flex items-start justify-between">
         <SearchHeader />
-        <ViewToggle />
+        <div className="flex items-center gap-3">
+          <NewHackathonButton />
+          <ViewToggle />
+        </div>
       </header>
 
       <div className="flex flex-wrap gap-3">

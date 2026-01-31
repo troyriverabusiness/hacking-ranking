@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, Clock, MapPin } from "lucide-react";
 import {
@@ -11,11 +12,10 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { cn } from "@/lib/utils";
 import { formatDateRange } from "@/lib/date-formatting";
 import type { Hackathon } from "@/models";
-
-const NOW = typeof window === "undefined" ? undefined : new Date();
 
 const STATUS_STYLES = {
   upcoming: "border-emerald-100 bg-emerald-50 text-emerald-700",
@@ -51,14 +51,42 @@ function getDurationInDays(start: string, end: string) {
 }
 
 export function HackathonCard({ hackathon }: { hackathon: Hackathon }) {
+  const [hovered, setHovered] = React.useState(false);
   const status = getStatus(hackathon.start_timestamp, hackathon.end_timestamp);
   const durationLabel = getDurationInDays(hackathon.start_timestamp, hackathon.end_timestamp);
   const extraTopics = Math.max(0, hackathon.topics.length - 3);
 
   return (
     <Link href={`/hackathons/${hackathon.id}`} className="block h-full">
-      <Card className="group h-full border-slate-200/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-xl">
-        <CardHeader className="pb-4">
+      <Card
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className="group relative h-full overflow-hidden border-slate-200/80 transition-all duration-200 hover:border-blue-200 hover:shadow-xl"
+      >
+        <div
+          className={cn(
+            "absolute inset-0 h-full w-full pointer-events-none transition-opacity duration-300",
+            hovered ? "opacity-100" : "opacity-0"
+          )}
+        >
+          <CanvasRevealEffect
+            animationSpeed={3}
+            containerClassName="bg-slate-50"
+            colors={[
+              [255, 255, 255],
+              [255, 255, 255],
+              [255, 255, 255],
+              [255, 255, 255],
+              [255, 255, 255],
+              [120, 180, 255],
+            ]}
+            opacities={[0.5, 0.5, 0.6, 0.6, 0.7, 0.7, 0.8, 0.8, 0.9, 1.0]}
+            dotSize={2}
+            showGradient={false}
+            playing={hovered}
+          />
+        </div>
+        <CardHeader className="relative z-10 pb-4">
           <div className="flex items-start justify-between gap-3">
             <Badge
               variant="outline"
@@ -80,7 +108,7 @@ export function HackathonCard({ hackathon }: { hackathon: Hackathon }) {
             {hackathon.description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="relative z-10 space-y-4">
           <div className="space-y-3 text-sm">
             <p className="flex items-center gap-2 font-medium text-slate-900">
               <Calendar className="h-4 w-4 text-blue-500" />
@@ -108,7 +136,7 @@ export function HackathonCard({ hackathon }: { hackathon: Hackathon }) {
             )}
           </div>
         </CardContent>
-        <CardFooter className="border-t border-slate-100 pt-4">
+        <CardFooter className="relative z-10 border-t border-slate-100 pt-4">
           <span className="flex items-center gap-1 text-sm font-semibold text-blue-600">
             Explore details
             <ArrowUpRight className="h-4 w-4" />

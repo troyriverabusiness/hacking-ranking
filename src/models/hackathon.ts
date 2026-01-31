@@ -8,4 +8,5 @@ export interface Hackathon {
     start_timestamp: string;
     end_timestamp: string;
     topics: Topic[];
+    created_by?: string;
 }

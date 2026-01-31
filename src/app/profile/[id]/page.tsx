@@ -15,6 +15,7 @@ import {
 } from "@/components/profile";
 import { Loading } from "@/components/loading";
 import { Empty } from "@/components/empty";
+import { Boxes } from "@/components/ui/background-boxes";
 
 interface HackathonParticipation {
   hackathon_id: string;
@@ -115,6 +116,8 @@ export default function ProfilePage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Boxes />
+
       {/* Profile Header */}
       <div className="mb-8">
         <ProfileHeader profile={profile} />

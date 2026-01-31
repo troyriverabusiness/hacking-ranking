@@ -1,5 +1,5 @@
 import { TrendingUp, Trophy, Award, Target } from "lucide-react";
-import { StatCard } from "./stat-card";
+import { ProfileStatCard } from "./profile-stat-card";
 
 interface ProfileStatsProps {
   currentRank: number;
@@ -15,34 +15,46 @@ export function ProfileStats({
   topThreeFinishes,
 }: ProfileStatsProps) {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <StatCard
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <ProfileStatCard
         label="Global Rank"
         value={`#${currentRank}`}
         icon={TrendingUp}
-        gradient="bg-gradient-to-br from-blue-500 to-indigo-600"
-        iconColor="text-blue-600 bg-blue-50"
+        color="#3b82f6"
+        gradientFrom="from-blue-500"
+        gradientTo="to-indigo-600"
+        iconBg="bg-blue-50"
+        iconColor="text-blue-600"
       />
-      <StatCard
+      <ProfileStatCard
         label="Hackathons"
         value={totalHackathons}
         icon={Trophy}
-        gradient="bg-gradient-to-br from-purple-500 to-pink-600"
-        iconColor="text-purple-600 bg-purple-50"
+        color="#a855f7"
+        gradientFrom="from-purple-500"
+        gradientTo="to-pink-600"
+        iconBg="bg-purple-50"
+        iconColor="text-purple-600"
       />
-      <StatCard
+      <ProfileStatCard
         label="Wins"
         value={totalWins}
         icon={Award}
-        gradient="bg-gradient-to-br from-yellow-500 to-orange-600"
-        iconColor="text-yellow-600 bg-yellow-50"
+        color="#f59e0b"
+        gradientFrom="from-yellow-500"
+        gradientTo="to-orange-600"
+        iconBg="bg-yellow-50"
+        iconColor="text-yellow-600"
       />
-      <StatCard
+      <ProfileStatCard
         label="Top 3 Finishes"
         value={topThreeFinishes}
         icon={Target}
-        gradient="bg-gradient-to-br from-green-500 to-emerald-600"
-        iconColor="text-green-600 bg-green-50"
+        color="#10b981"
+        gradientFrom="from-green-500"
+        gradientTo="to-emerald-600"
+        iconBg="bg-green-50"
+        iconColor="text-green-600"
       />
     </div>
   );
