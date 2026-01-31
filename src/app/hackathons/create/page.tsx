@@ -2,65 +2,63 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { HackathonForm } from "@/components/hackathons/hackathon-form";
-import { createNewHackathon } from "@/lib/supabase/createNewHackathon";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Hackathon } from "@/models";
+import { CreateHackathonForm } from "@/components/hackathons/create-hackathon-form";
+import { GalleryVerticalEnd } from "lucide-react";
 
-export default function CreateHackathonPage() {
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { LinkUploadCard } from "@/components/hackathons/link-upload-card";
+
+
+export default function CreateHackathonImprovedPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (data: Omit<Hackathon, "id">) => {
+
+  // Create hackathon and redirect to hackathon page
+  // TODO: Implement this
+  const handleSubmit = async () => {
     setError(null);
     setIsLoading(true);
-
-    try {
-      const newHackathon = await createNewHackathon(data as Hackathon);
-
-      if (!newHackathon) {
-        setError("Failed to create hackathon. Please try again.");
-        setIsLoading(false);
-        return;
-      }
-
-      // Redirect to the newly created hackathon's detail page
-      router.push(`/hackathons/${newHackathon.id}`);
-      router.refresh();
-    } catch (err) {
-      console.error("Error creating hackathon:", err);
-      setError("An unexpected error occurred. Please try again.");
-      setIsLoading(false);
-    }
   };
 
+  // Return to hackathons page
   const handleCancel = () => {
     router.push("/hackathons");
   };
 
-  return (
-    <div className="container mx-auto py-10">
-      <Card className="max-w-3xl mx-auto border-blue-200">
-        <CardHeader>
-          <CardTitle>Create New Hackathon</CardTitle>
-          <CardDescription>
-            Fill in the details to create a new hackathon event
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <div className="mb-6 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-200">
-              {error}
+  return(
+    <div className="grid min-h-svh lg:grid-cols-2">
+
+      {/* Left side = background + link input */}
+      <div className="bg-muted relative hidden lg:block">
+        <div className="relative z-10 flex items-center justify-center min-h-screen p-6">
+          <div className="w-full max-w-md">
+            <LinkUploadCard />
+          </div>
+        </div>
+        <BackgroundBeams />
+      </div>
+
+      {/* Right side = Actual form */}
+      <div className="flex flex-col gap-4 p-6 md:p-10">
+        <div className="flex justify-center gap-2 md:justify-start">
+          <a href="#" className="flex items-center gap-2 font-medium">
+            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+              <GalleryVerticalEnd className="size-4" />
             </div>
-          )}
-          <HackathonForm
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            isLoading={isLoading}
-          />
-        </CardContent>
-      </Card>
+            Powered by Blau Tech©
+          </a>
+        </div>
+        <div className="flex flex-1 items-center justify-center">
+          <div className="w-full max-w-xs">
+            <CreateHackathonForm />
+          </div>
+        </div>
+      </div>
+
+      
+      
     </div>
   );
 }
