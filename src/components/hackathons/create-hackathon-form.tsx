@@ -23,32 +23,66 @@ import { Textarea } from "@/components/ui/textarea"
 
 import Calendar26 from "../calendar-26"
 
-import { locations, Topic } from "@/models/enums"
+import { locations, Topic, Location } from "@/models/enums"
 import { useState } from "react"
 import { TopicsSelection } from "@/components/hackathons/topics-selection"
 
+export type HackathonFormData = Omit<import("@/models/hackathon").Hackathon, "id" | "created_by">;
 
-
-interface CreateHackathonFormProps extends React.ComponentProps<"form"> {
-    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+interface CreateHackathonFormProps {
+    className?: string;
+    onFormSubmit?: (data: HackathonFormData) => void;
     onCancel?: () => void;
+    isLoading?: boolean;
 }
 
 export function CreateHackathonForm({
     className,
-    onSubmit,
+    onFormSubmit,
     onCancel,
-    ...props
+    isLoading = false,
 }: CreateHackathonFormProps) {
+    const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
+    const [selectedLocation, setSelectedLocation] = useState<Location | "">("");
+    const [dateFrom, setDateFrom] = useState<Date | undefined>(new Date("2025-06-01"));
+    const [dateTo, setDateTo] = useState<Date | undefined>(new Date("2025-06-03"));
+    const [timeFrom, setTimeFrom] = useState<string>("10:30:00");
+    const [timeTo, setTimeTo] = useState<string>("12:30:00");
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        onSubmit?.(e);
+
+        const formData = new FormData(e.currentTarget);
+        const name = formData.get("name") as string;
+        const description = formData.get("description") as string;
+
+        if (!selectedLocation || !dateFrom || !dateTo) {
+            return;
+        }
+
+        // Combine date and time into ISO timestamp
+        const startDate = new Date(dateFrom);
+        const [startHour, startMinute, startSecond] = timeFrom.split(':').map(Number);
+        startDate.setHours(startHour, startMinute, startSecond);
+
+        const endDate = new Date(dateTo);
+        const [endHour, endMinute, endSecond] = timeTo.split(':').map(Number);
+        endDate.setHours(endHour, endMinute, endSecond);
+
+        const data: HackathonFormData = {
+            name,
+            description,
+            location: selectedLocation as Location,
+            start_timestamp: startDate.toISOString(),
+            end_timestamp: endDate.toISOString(),
+            topics: selectedTopics,
+        };
+
+        onFormSubmit?.(data);
     };
 
-    const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
-
     return (
-        <form className={cn("flex flex-col h-full", className)} onSubmit={handleSubmit} {...props}>
+        <form className={cn("flex flex-col h-full", className)} onSubmit={handleSubmit}>
             <FieldGroup className="flex flex-col h-full">
                 <FieldSet className="flex-1 flex flex-col justify-center">
                     <FieldLegend>Create Hackathon</FieldLegend>
@@ -63,6 +97,7 @@ export function CreateHackathonForm({
                                 </FieldLabel>
                                 <Input
                                     id="checkout-7j9-card-name-43j"
+                                    name="name"
                                     placeholder="e.g. Blau Tech Hacks"
                                     required
                                     className="bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400"
@@ -72,7 +107,7 @@ export function CreateHackathonForm({
                                 <FieldLabel htmlFor="checkout-exp-month-ts6">
                                     Location
                                 </FieldLabel>
-                                <Select defaultValue="">
+                                <Select value={selectedLocation} onValueChange={(value) => setSelectedLocation(value as Location)} required>
                                     <SelectTrigger id="checkout-exp-month-ts6" className="bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400">
                                         <SelectValue placeholder="Select a location" />
                                     </SelectTrigger>
@@ -94,6 +129,7 @@ export function CreateHackathonForm({
                             </FieldLabel>
                             <Textarea
                                 id="checkout-7j9-optional-comments"
+                                name="description"
                                 placeholder="Describe your hackathon"
                                 className="resize-none bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400"
                             />
@@ -101,7 +137,16 @@ export function CreateHackathonForm({
                                 Brief description of your hackathon.
                             </FieldDescription>
                         </Field>
-                        <Calendar26 />
+                        <Calendar26
+                            dateFrom={dateFrom}
+                            dateTo={dateTo}
+                            timeFrom={timeFrom}
+                            timeTo={timeTo}
+                            onDateFromChange={setDateFrom}
+                            onDateToChange={setDateTo}
+                            onTimeFromChange={setTimeFrom}
+                            onTimeToChange={setTimeTo}
+                        />
 
                         {/* TODO: Add a gray divider */}
 
@@ -113,10 +158,12 @@ export function CreateHackathonForm({
                     </FieldGroup>
                 </FieldSet>
                 <Field orientation="horizontal" className="mt-auto pt-6">
-                    <Button variant="outline" type="button" onClick={onCancel}>
+                    <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
                         Cancel
                     </Button>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" disabled={isLoading}>
+                        {isLoading ? "Creating..." : "Submit"}
+                    </Button>
                 </Field>
             </FieldGroup>
         </form>

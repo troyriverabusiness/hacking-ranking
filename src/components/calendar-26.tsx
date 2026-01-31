@@ -13,15 +13,45 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export default function Calendar26() {
+interface Calendar26Props {
+  dateFrom?: Date | undefined;
+  dateTo?: Date | undefined;
+  timeFrom?: string;
+  timeTo?: string;
+  onDateFromChange?: (date: Date | undefined) => void;
+  onDateToChange?: (date: Date | undefined) => void;
+  onTimeFromChange?: (time: string) => void;
+  onTimeToChange?: (time: string) => void;
+}
+
+export default function Calendar26({
+  dateFrom: controlledDateFrom,
+  dateTo: controlledDateTo,
+  timeFrom: controlledTimeFrom = "10:30:00",
+  timeTo: controlledTimeTo = "12:30:00",
+  onDateFromChange,
+  onDateToChange,
+  onTimeFromChange,
+  onTimeToChange,
+}: Calendar26Props = {}) {
   const [openFrom, setOpenFrom] = React.useState(false)
   const [openTo, setOpenTo] = React.useState(false)
-  const [dateFrom, setDateFrom] = React.useState<Date | undefined>(
+
+  // Use controlled values if provided, otherwise use internal state
+  const [internalDateFrom, setInternalDateFrom] = React.useState<Date | undefined>(
     new Date("2025-06-01")
   )
-  const [dateTo, setDateTo] = React.useState<Date | undefined>(
+  const [internalDateTo, setInternalDateTo] = React.useState<Date | undefined>(
     new Date("2025-06-03")
   )
+
+  const dateFrom = controlledDateFrom !== undefined ? controlledDateFrom : internalDateFrom;
+  const dateTo = controlledDateTo !== undefined ? controlledDateTo : internalDateTo;
+  const timeFrom = controlledTimeFrom;
+  const timeTo = controlledTimeTo;
+
+  const setDateFrom = onDateFromChange || setInternalDateFrom;
+  const setDateTo = onDateToChange || setInternalDateTo;
 
   return (
     <div className="flex w-full min-w-0 justify-between gap-6">
@@ -71,7 +101,8 @@ export default function Calendar26() {
             type="time"
             id="time-from"
             step="1"
-            defaultValue="10:30:00"
+            value={timeFrom}
+            onChange={(e) => onTimeFromChange?.(e.target.value)}
             className="bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
           />
         </div>
@@ -123,7 +154,8 @@ export default function Calendar26() {
             type="time"
             id="time-to"
             step="1"
-            defaultValue="12:30:00"
+            value={timeTo}
+            onChange={(e) => onTimeToChange?.(e.target.value)}
             className="bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
           />
         </div>
