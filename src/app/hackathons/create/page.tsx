@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { CreateHackathonForm } from "@/components/hackathons/create-hackathon-form";
 import { GalleryVerticalEnd } from "lucide-react";
 
-import { BackgroundBeams } from "@/components/ui/background-beams";
+import { CanvasRevealBackground } from "@/components/canvas-reveal-background";
 import { LinkUploadCard } from "@/components/hackathons/link-upload-card";
 import { Separator } from "@/components/ui/separator";
 
@@ -60,13 +60,14 @@ export default function CreateHackathonImprovedPage() {
     <div className="grid h-[calc(100vh-4rem)] lg:grid-cols-2 relative">
 
       {/* Left side = background + link input */}
-      <div className="bg-blue-50 relative hidden lg:block">
-        <div className="relative z-10 flex items-center justify-center h-full p-6">
-          <div className="w-full max-w-md">
-            <LinkUploadCard />
+      <div className="bg-blue-50 relative hidden lg:block h-full">
+        <CanvasRevealBackground>
+          <div className="flex items-center justify-center h-full p-6">
+            <div className="w-full max-w-md">
+              <LinkUploadCard />
+            </div>
           </div>
-        </div>
-        <BackgroundBeams />
+        </CanvasRevealBackground>
       </div>
 
       {/* Vertical Divider */}
