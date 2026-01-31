@@ -7,6 +7,7 @@ import {
   FieldError,
   FieldLabel,
 } from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
 import { topics, type Topic } from "@/models/enums";
 import { cn } from "@/lib/utils";
 
@@ -27,10 +28,23 @@ export function TopicsSelection({ value, onChange, error }: TopicsSelectionProps
 
   return (
     <Field>
-      <FieldLabel>Topics</FieldLabel>
-      <FieldDescription>
-        Select all topics that apply to your hackathon
-      </FieldDescription>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <FieldLabel>Topics</FieldLabel>
+          <FieldDescription>
+            Select all topics that apply to your hackathon
+          </FieldDescription>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => onChange([])}
+          disabled={value.length === 0}
+        >
+          Clear
+        </Button>
+      </div>
       <div className="flex flex-wrap gap-2 mt-2">
         {topics.map((topic) => {
           const isSelected = value.includes(topic);
