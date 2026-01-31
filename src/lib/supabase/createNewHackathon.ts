@@ -1,6 +1,6 @@
 import { supabase } from "../supabaseClient";
 import { Hackathon } from "@/models/hackathon";
-import { getCurrentUser } from "../auth";
+import { getCurrentUser } from "./auth";
 
 // Create a new hackathon
 export async function createNewHackathon(hackathon: Hackathon): Promise<Hackathon | null> {

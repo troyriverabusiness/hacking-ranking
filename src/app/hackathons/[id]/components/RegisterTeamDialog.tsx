@@ -15,12 +15,38 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerTeam } from "@/lib/supabase";
+
+import { getCurrentUser } from "@/lib/supabase/auth";
+import { createTeam, addTeamMember, RegisterTeamInput } from "@/lib/supabase/team";
+import { type Team } from "@/models/team";
 
 interface RegisterTeamDialogProps {
   hackathonId: string;
   onSuccess: () => void;
 }
+
+async function registerTeam(input: RegisterTeamInput): Promise<Team | null> {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    console.error('User must be authenticated to register a team');
+    return null;
+  }
+
+  const team = await createTeam(input);
+
+  if (!team) {
+    console.error('Error creating team');
+    return null;
+  }
+
+  // Step 2: Add the current user as a team member in the team_members junction table
+  const member = await addTeamMember(team.id, user.id);
+
+  // Return the team with members array populated
+  return team;
+}
+
 
 export function RegisterTeamDialog({ hackathonId, onSuccess }: RegisterTeamDialogProps) {
   const [open, setOpen] = useState(false);

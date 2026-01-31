@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 import { getHackathon } from "@/lib/supabase/getHackathon";
-import { updateHackathon } from "@/lib/supabase/updateHackathon";
+import { updateHackathon } from "@/lib/supabase/hackathon";
 import type { Hackathon, ChallengeTrack } from "@/models";
 import type { HackathonFormData } from "@/components/hackathons/create-hackathon-form";
 

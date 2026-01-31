@@ -11,12 +11,14 @@ import { useRouter } from "next/navigation";
 
 import { type Team, type Hackathon } from "@/models";
 import { getHackathon, getHackathonTeams, getTeamParticipants } from "@/lib/supabase/index";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/supabase/auth";
 import { LeaderboardTable, BackButtonHackathons, HackathonInProgress, HackathonHero, RegisterTeamDialog } from "./components";
 import { Loading } from "@/components/loading";
 import { Empty } from "@/components/empty";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+
+import { ChallengeTracksOverview } from "@/components/hackathons/challenge-tracks-overview";
 
 export default function HackathonDetailPage({
   params,
@@ -110,6 +112,12 @@ export default function HackathonDetailPage({
 
       {/* Hero Section */}
       <HackathonHero hackathon={hackathon} />
+
+      {/* Challenge Tracks Section */}
+      <ChallengeTracksOverview hackathonId={id} />
+
+      {/* TODO: Challenge Track Leaderboards */}
+
 
       {/* Team Registration Section - Show if authenticated and hackathon has started */}
       {userId && hasStarted && (

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/supabase/auth';
 import { getProfile } from '@/lib/supabase';
 import { ProfileCompletionDialog } from '@/components/profile/profile-completion-dialog';
 

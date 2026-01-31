@@ -4,7 +4,7 @@ import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { Profile } from "@/models";
 import { getProfile, getAllProfiles } from "@/lib/supabase";
-import { getCurrentUser, signOut } from "@/lib/auth";
+import { getCurrentUser, signOut } from "@/lib/supabase/auth";
 import { Button } from "@/components/ui/button";
 import { LogOut, UserX } from "lucide-react";
 import {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/supabase/auth";
 import { getProfile } from "@/lib/supabase";
 import { supabase } from "@/lib/supabaseClient";
 import { NavigationClient } from "./navigation-client";

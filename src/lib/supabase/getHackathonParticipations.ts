@@ -1,7 +1,7 @@
 import { Hackathon } from "@/models/hackathon";
 import { supabase } from "../supabaseClient";
 
-
+// TODO: Fragile - this will break and will need to be adapted
 export async function getHackathonParticipations(userId: string): Promise<Hackathon[]> {
     // We want to get all teams this user has been on, and then what hackathons these teams have participated in
     

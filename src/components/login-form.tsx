@@ -19,7 +19,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { signIn } from '@/lib/auth';
+import { signIn } from '@/lib/supabase/auth';
 
 export function LoginForm({
   className,
