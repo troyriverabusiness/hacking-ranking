@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,11 +15,11 @@ import {
   Field,
   FieldGroup,
   FieldLabel,
-  FieldDescription,
   FieldError,
 } from "@/components/ui/field";
 import { type Hackathon } from "@/models";
-import { locations, topics, type Location, type Topic } from "@/models/enums";
+import { locations, type Location, type Topic } from "@/models/enums";
+import { TopicsSelection } from "@/components/hackathons/topics-selection";
 import { cn } from "@/lib/utils";
 
 interface HackathonFormProps {
@@ -48,14 +47,6 @@ export function HackathonForm({
   const [selectedTopics, setSelectedTopics] = useState<Topic[]>(initialData?.topics || []);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const toggleTopic = (topic: Topic) => {
-    setSelectedTopics((prev) =>
-      prev.includes(topic)
-        ? prev.filter((t) => t !== topic)
-        : [...prev, topic]
-    );
-  };
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -179,35 +170,11 @@ export function HackathonForm({
           </Field>
         </div>
 
-        <Field>
-          <FieldLabel>Topics</FieldLabel>
-          <FieldDescription>
-            Select all topics that apply to your hackathon
-          </FieldDescription>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {topics.map((topic) => {
-              const isSelected = selectedTopics.includes(topic);
-              return (
-                <button
-                  key={topic}
-                  type="button"
-                  onClick={() => toggleTopic(topic)}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2",
-                    isSelected
-                      ? "bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100"
-                      : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
-                  )}
-                >
-                  {topic}
-                  {isSelected && <X className="h-3 w-3" />}
-                </button>
-              );
-            })}
-          </div>
-          {errors.topics && <FieldError>{errors.topics}</FieldError>}
-        </Field>
+        <TopicsSelection
+          value={selectedTopics}
+          onChange={setSelectedTopics}
+          error={errors.topics}
+        />
 
         <div className="flex justify-end gap-3 pt-4">
           {onCancel && (

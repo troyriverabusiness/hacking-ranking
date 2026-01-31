@@ -8,7 +8,6 @@ import {
     FieldGroup,
     FieldLabel,
     FieldLegend,
-    FieldSeparator,
     FieldSet,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
@@ -24,7 +23,9 @@ import { Textarea } from "@/components/ui/textarea"
 
 import Calendar26 from "../calendar-26"
 
-import { locations } from "@/models/enums"
+import { locations, Topic } from "@/models/enums"
+import { useState } from "react"
+import { TopicsSelection } from "@/components/hackathons/topics-selection"
 
 
 
@@ -44,6 +45,8 @@ export function CreateHackathonForm({
         onSubmit?.(e);
     };
 
+    const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
+
     return (
         <form className={cn("flex flex-col h-full", className)} onSubmit={handleSubmit} {...props}>
             <FieldGroup className="flex flex-col h-full">
@@ -60,7 +63,7 @@ export function CreateHackathonForm({
                                 </FieldLabel>
                                 <Input
                                     id="checkout-7j9-card-name-43j"
-                                    placeholder="Evil Rabbit"
+                                    placeholder="e.g. Blau Tech Hacks"
                                     required
                                     className="bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400"
                                 />
@@ -71,7 +74,7 @@ export function CreateHackathonForm({
                                 </FieldLabel>
                                 <Select defaultValue="">
                                     <SelectTrigger id="checkout-exp-month-ts6" className="bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400">
-                                        <SelectValue placeholder="MM" />
+                                        <SelectValue placeholder="Select a location" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
@@ -91,7 +94,7 @@ export function CreateHackathonForm({
                             </FieldLabel>
                             <Textarea
                                 id="checkout-7j9-optional-comments"
-                                placeholder="Add any additional comments"
+                                placeholder="Describe your hackathon"
                                 className="resize-none bg-white border-blue-300 focus:border-blue-400 focus:ring-blue-400"
                             />
                             <FieldDescription>
@@ -99,10 +102,18 @@ export function CreateHackathonForm({
                             </FieldDescription>
                         </Field>
                         <Calendar26 />
+
+                        {/* TODO: Add a gray divider */}
+
+
+                        <TopicsSelection
+                            value={selectedTopics}
+                            onChange={setSelectedTopics}
+                        />
                     </FieldGroup>
                 </FieldSet>
                 <Field orientation="horizontal" className="mt-auto pt-6">
-                    <Button variant="outline" type="button">
+                    <Button variant="outline" type="button" onClick={onCancel}>
                         Cancel
                     </Button>
                     <Button type="submit">Submit</Button>
